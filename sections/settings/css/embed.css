@@ -1,0 +1,8 @@
+/* Inside UCAAS the shared top bar replaces this page's own top bar (the sidebar below it stays: it is the Settings navigation).
+   The 80% density that this page used to apply itself (html{zoom:.8}) is now applied by the shell around every section. */
+html.embedded{zoom:1}
+html.embedded .topbar{display:none}
+html.embedded .shell{min-height:100vh}
+html.embedded .sidebar{top:0;height:100vh}
+:root.embedded{--ws-offset:calc(var(--ws-head-h) + 16px)}
+html.embedded .ws-head,html.embedded .ws-tabs{top:0}

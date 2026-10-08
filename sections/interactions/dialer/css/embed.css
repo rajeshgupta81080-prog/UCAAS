@@ -1,0 +1,9 @@
+/* Inside UCAAS only the middle part of the dialer is used (keypad + copilot): its own top bar and left menu are hidden.
+   Colours follow the Company Rules Settings / top bar tokens; Inter and the 80% density already match. */
+html.embedded .topbar,
+html.embedded .navside{display:none}
+:root{--s950:#f1f3f9;--s800:#f6f8fc;--s700:#e4e8f0;--s100:#111827;--s200:#374151;--s300:#6b7280;--b600:#2563eb;--b700:#1d4ed8;--b50:#e8efff}
+html.embedded,html.embedded body{background:#f1f3f9;color:#111827}
+/* the dialer is a light-only design: its dark theme inverts the finished page (pictures are turned back) */
+:root[data-theme=dark]{filter:invert(1) hue-rotate(180deg);background:#fff}
+:root[data-theme=dark] img,:root[data-theme=dark] video,:root[data-theme=dark] canvas{filter:invert(1) hue-rotate(180deg)}

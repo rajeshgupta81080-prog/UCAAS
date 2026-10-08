@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <script src="../../shared/js/embed-bridge.js"></script>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Directory</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="../../shared/css/tokens.css" />
+    <link rel="stylesheet" href="css/directory.css" />
+  </head>
+  <body>
+    <main class="dir">
+      <header class="dir-head">
+        <div>
+          <h1>Directory</h1>
+          <p class="muted" id="count"></p>
+        </div>
+        <div class="tabs" role="tablist" aria-label="Directory views">
+          <button type="button" role="tab" data-view="people">People</button>
+          <button type="button" role="tab" data-view="teams">Teams</button>
+        </div>
+      </header>
+
+      <!-- People -->
+      <section id="view-people" hidden>
+        <div class="toolbar">
+          <label class="field grow"><span class="sr">Search people</span>
+            <input id="q" type="search" placeholder="Search name, extension, email…" autocomplete="off" /></label>
+          <label class="field"><span class="sr">Team</span><select id="fTeam"></select></label>
+          <label class="field"><span class="sr">Status</span><select id="fStatus"></select></label>
+        </div>
+        <div class="card tw">
+          <table id="peopleTable">
+            <thead><tr>
+              <th data-sort="name">Name</th><th data-sort="ext">Ext.</th><th data-sort="role">Role</th>
+              <th data-sort="team">Team</th><th data-sort="status">Status</th><th class="r">Actions</th>
+            </tr></thead>
+            <tbody></tbody>
+          </table>
+          <div id="empty" class="empty" hidden>No people match these filters.</div>
+        </div>
+        <nav class="pager" id="pager" aria-label="Pages"></nav>
+      </section>
+
+      <!-- Teams -->
+      <section id="view-teams" hidden><div class="cards" id="teamCards"></div></section>
+    </main>
+
+    <!-- person detail drawer -->
+    <div class="scrim" id="scrim" hidden></div>
+    <dialog class="sched" id="sched" aria-labelledby="schedTitle"></dialog>
+    <aside class="drawer" id="drawer" aria-label="Person details" hidden></aside>
+
+    <script src="js/data.js"></script>
+    <script src="js/people.js"></script>
+    <script src="js/teams.js"></script>
+    <script src="js/main.js"></script>
+    <script src="js/role.js"></script>
+    <script src="js/link.js"></script>
+  </body>
+</html>

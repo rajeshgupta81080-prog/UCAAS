@@ -1,0 +1,43 @@
+/* Scheduled calls + company-rule rows under Ready state (reuses the .ready card look). */
+.ready.sched{margin-top:13px}
+.sched-n{margin-left:6px;padding:1px 7px;border-radius:9px;background:var(--b50);color:var(--b700);font-size:11px;font-weight:700}
+.sched-row .k{display:flex;flex-direction:column;gap:2px;min-width:0}
+.sched-nm{color:var(--s100);font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.sched-when{font-size:12px;color:var(--s400)}
+.sched-when.late{color:#d97706}
+.sched-btn{display:inline-flex;align-items:center;gap:5px;height:28px;padding:0 9px;border-radius:8px;border:1px solid var(--s700);background:#fff;color:var(--s100);font-size:12px;font-weight:600;cursor:pointer}
+.sched-btn:hover{background:var(--b50);color:var(--b700)}
+.sched-btn.go{background:var(--b600);border-color:var(--b600);color:#fff}
+.sched-btn:disabled{opacity:.5;cursor:default}
+
+.ready.sched .sec-title{display:flex;align-items:center}
+.sched-add{margin-left:auto}
+.sched-empty .k{color:var(--s400)}
+dialog.sched-dlg{border:1px solid var(--s700);border-radius:16px;padding:0;width:min(420px,92vw);background:#fff;color:var(--s100);box-shadow:var(--sh-2xl)}
+dialog.sched-dlg::backdrop{background:rgba(15,23,42,.45)}
+.sched-dlg form{display:grid;gap:12px;padding:20px}
+.sched-dlg h2{font-size:17px;font-weight:700}
+.sched-dlg label{display:grid;gap:5px;font-size:12px;font-weight:600;color:var(--s200)}
+.sched-dlg input{height:38px;border:1px solid var(--s700);border-radius:10px;padding:0 11px;font-size:14px;background:#fff;color:var(--s100);font-weight:400}
+.sched-dlg input:focus{outline:2px solid var(--b300);outline-offset:-1px}
+.sched-err{background:#fef2f2;border:1px solid #fecaca;color:#b91c1c;border-radius:10px;padding:8px 10px;font-size:12px}
+.sched-warn{background:#fffbeb;border:1px solid #fde9a8;color:#92400e;border-radius:10px;padding:8px 10px;font-size:12px}
+.sched-row2{display:flex;justify-content:flex-end;gap:8px}
+.sched-row2 .sched-btn{height:36px;padding:0 16px;font-size:13px}
+
+.closed-banner{display:flex;gap:10px;align-items:flex-start;border-radius:14px;border:1px solid #fecaca;background:#fef2f2;color:#991b1b;padding:10px 14px;margin-bottom:13px;font-size:13px}
+.closed-banner div{display:grid;gap:2px}
+.closed-banner span{font-size:12px;color:#b45353}
+
+.rrow .v .sub{font-weight:500;color:var(--s400)}
+.stat-chips{display:flex;flex-wrap:wrap;gap:6px;padding:6px 0 10px}
+.stat-chip{height:30px;padding:0 12px;border-radius:15px;border:1px solid var(--s700);background:#fff;color:var(--s200);font-size:12px;font-weight:600;cursor:pointer}
+.stat-chip:hover:not(:disabled){background:var(--b50);color:var(--b700)}
+.stat-chip.on{background:var(--b600);border-color:var(--b600);color:#fff}
+.stat-chip:disabled{opacity:.5;cursor:default}
+.stat-note{display:block;border-top:1px solid var(--s700);padding:10px 0 12px;font-size:12.5px;color:var(--s400)}
+.stat-note b{color:var(--s100)}
+.stat-time{font-family:ui-monospace,monospace;font-weight:600;color:var(--s100)}
+.stat-time.over{color:#dc2626}
+.ready.stat{margin-top:13px}
+html.rec-off .lc-ctl[data-a="rec"]{display:none}

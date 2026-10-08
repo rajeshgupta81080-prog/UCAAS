@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script src="../../../shared/js/embed-bridge.js"></script>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Tasks</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/base.css">
+<link rel="stylesheet" href="css/extra.css">
+<link rel="stylesheet" href="css/embed.css">
+</head>
+<body>
+<div id="root">
+<div class="app">
+  <header class="topbar">
+    <div class="logo">
+      <svg width="40" height="30" viewBox="0 0 40 30"><path d="M31 27H10a8 8 0 0 1-1-15.9A10 10 0 0 1 28 9a9 9 0 0 1 3 18z" fill="#1d6bf3"/><path d="M18 17.5a6 6 0 0 0 4 4l1.6-1.6a1 1 0 0 1 1-.2l2 .7a1 1 0 0 1 .7 1v1.8a1 1 0 0 1-1 1A10 10 0 0 1 16 14a1 1 0 0 1 1-1h1.8a1 1 0 0 1 1 .7l.7 2a1 1 0 0 1-.2 1z" fill="#fff" transform="translate(-1 -3) scale(.95)"/></svg>
+      <div><b>UCaaS</b><small>Unified Calling as a Service</small></div>
+    </div>
+    <div class="searchwrap">
+      <div class="search"><span id="ic-search"></span><input id="gsearch" placeholder="Search tasks, calls, customers, agents...  ( / )" autocomplete="off" aria-label="Global search"><kbd>/</kbd></div>
+      <div class="searchres" id="sres"></div>
+    </div>
+    <div class="tright">
+      <button class="btn primary sm" data-act="createmenu" style="height:34px"><span id="ic-plus"></span> Create <span id="ic-cd"></span></button>
+      <div style="position:relative">
+        <button class="iconbtn" data-act="notif" id="bell" aria-label="Notifications"><span id="ic-bell"></span><span class="badge" id="bellBadge"></span></button>
+        <div class="pop" id="notifPop"></div>
+      </div>
+      <div class="clock"><span id="ic-clock"></span><div><b id="clk">--:--:--</b><small id="gmt">GMT</small></div></div>
+      <button class="presbtn" id="presBtn" data-act="presmenu"><i class="pdot" id="presDot"></i><span id="presLbl">Available</span></button>
+      <button class="avatar" id="avBtn" data-act="avatar" aria-label="Profile menu">AU</button>
+    </div>
+  </header>
+  <nav class="side" id="side" aria-label="Main navigation"></nav>
+  <main id="main"><div id="page"></div></main>
+</div>
+<div id="incoming"></div>
+<div id="drawerBg" data-act="drawerclose"></div>
+<aside id="drawer" role="dialog" aria-label="Task details"></aside>
+<div id="modal" role="dialog" aria-modal="true"></div>
+<div id="menu"></div>
+<div id="toasts" aria-live="polite"></div>
+</div>
+
+<script src="js/engine.js"></script>
+<script src="js/ui1.js"></script>
+<script src="js/ui2.js"></script>
+<script src="js/role.js"></script>
+<script src="js/link.js"></script>
+</body>
+</html>

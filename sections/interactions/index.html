@@ -1,0 +1,22 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <script src="../../shared/js/embed-bridge.js"></script>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Interactions</title>
+    <link rel="stylesheet" href="../../shared/css/tokens.css" />
+    <link rel="stylesheet" href="css/interactions.css" />
+  </head>
+  <body>
+    <!-- Interactions = the Meetings app (it owns the left rail: Phone, Chat, Video, ...) with the dialer (Phone) or Tasks opened beside the rail. -->
+    <iframe id="pane-video" title="Video meetings" src="video/video-meetings.html"
+            allow="camera; microphone; display-capture; autoplay; clipboard-read; clipboard-write; fullscreen; picture-in-picture"></iframe>
+    <iframe id="pane-dialer" class="side-pane" title="Calls" hidden
+            allow="camera; microphone; autoplay; clipboard-read; clipboard-write; fullscreen"></iframe>
+    <iframe id="pane-tasks" class="side-pane" title="Tasks" hidden
+            allow="clipboard-read; clipboard-write; fullscreen"></iframe>
+    <script src="js/pages.js"></script>
+    <script src="js/interactions.js"></script>
+  </body>
+</html>

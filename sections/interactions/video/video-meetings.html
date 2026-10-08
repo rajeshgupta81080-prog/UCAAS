@@ -1,0 +1,1950 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script src="../../../shared/js/embed-bridge.js"></script>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Video Meetings · MCM / Teloz</title>
+<script>
+  /* "Start Meeting" opens the meeting in its own tab (index.html?view=meeting&…). Mark it right away so this tab shows only the meeting, never a flash of the launcher page. */
+  if (/[?&]view=meeting(&|$)/.test(location.search)) document.documentElement.classList.add("meeting-tab");
+  /* the saved theme (the same "mcm-dark-mode" the whole app uses) is applied before the first paint, so the meeting tab never flashes the other theme */
+  try { if (localStorage.getItem("mcm-dark-mode") === "dark") document.documentElement.setAttribute("data-theme", "dark"); } catch (e) { /* storage unavailable */ }
+</script>
+<link rel="stylesheet" href="css/video.css" />
+<link rel="stylesheet" href="css/embed.css" />
+</head>
+<body>
+
+<!-- ============ APP SHELL: the page never scrolls; only the sidebar list and the main content do ============ -->
+<div class="app">
+
+<!-- ============ TOP NAVBAR ============ -->
+<header class="navbar">
+  <div class="navbar-left">
+    <div class="logo-mark" aria-label="MCM logo">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 8.82a15 15 0 0 1 20 0"/><path d="M5 12.859a10 10 0 0 1 14 0"/><path d="M8.5 16.429a5 5 0 0 1 7 0"/><line x1="12" y1="20" x2="12.01" y2="20"/></svg>
+    </div>
+    <nav class="navbar-tabs" aria-label="Primary">
+      <a class="nav-tab" data-tab="dashboard" href="#/dashboard" data-perm="dashboard.view">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="9" rx="1"/><rect x="14" y="3" width="7" height="5" rx="1"/><rect x="14" y="12" width="7" height="9" rx="1"/><rect x="3" y="16" width="7" height="5" rx="1"/></svg>
+        <span>Dashboard</span>
+      </a>
+      <a class="nav-tab" data-tab="directory" href="#/directory" data-perm="directory.view">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 9h18"/><path d="M9 15h6"/></svg>
+        <span>Directory</span>
+      </a>
+      <a class="nav-tab active" data-tab="interactions" href="#/interactions">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.362 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.338 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+        <span>Interactions</span>
+      </a>
+      <a class="nav-tab" data-tab="analytics" href="#/analytics" data-perm="analytics.view">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><path d="M18 17V9"/><path d="M13 17V5"/><path d="M8 17v-3"/></svg>
+        <span>Analytics</span>
+      </a>
+      <a class="nav-tab" data-tab="settings" href="#/settings" data-perm="settings.view">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+        <span>Settings</span>
+      </a>
+    </nav>
+  </div>
+
+  <div class="navbar-center">
+    <button class="search-pill" id="globalSearchTrigger" type="button" aria-label="Open global search">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      <span class="search-placeholder">Search here...</span>
+      <span class="kbd-badge">Ctrl K</span>
+    </button>
+  </div>
+
+  <div class="navbar-right">
+    <div class="notif-wrap">
+      <button class="icon-btn" id="notifBtn" aria-label="Notifications" type="button">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg>
+        <span class="notif-badge" id="notifBadge">9+</span>
+      </button>
+      <div class="dropdown notif-dropdown" id="notifDropdown">
+        <div class="dropdown-header">Notifications</div>
+        <div class="notif-list" id="notifList"></div>
+      </div>
+    </div>
+
+    <button class="icon-btn round" id="darkModeToggle" aria-label="Toggle dark mode" type="button">
+      <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+    </button>
+
+    <div class="clock-block">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+      <span id="liveClock">00:00:00</span>
+      <span class="gmt-label">GMT+5:30</span>
+    </div>
+
+    <div class="status-pill" id="statusPill">
+      <span class="status-dot off"></span>
+      <span>Off duty</span>
+      <span class="status-timer" id="dutyTimer">00:00:00</span>
+    </div>
+
+    <div class="wallet-chip">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12V7H5a2 2 0 0 1 0-4h14v4"/><path d="M3 5v14a2 2 0 0 0 2 2h16v-5"/><path d="M18 12a2 2 0 0 0 0 4h4v-4Z"/></svg>
+      <span>$20.00</span>
+    </div>
+
+    <div class="avatar-wrap" id="navAvatar" title="Vivek Gupta">
+      <div class="avatar" data-me-initials>VG</div>
+      <span class="online-dot"></span>
+    </div>
+  </div>
+</header>
+
+<div class="app-body">
+  <!-- ============ LEFT ICON RAIL ============ -->
+  <nav class="icon-rail" aria-label="Modules">
+   <div id="railModulesSection">
+    <a class="rail-item" data-rail="phone" href="#">
+      <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.362 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.338 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+      <span>Phone</span>
+    </a>
+    <a class="rail-item" data-rail="chat" href="#">
+      <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+      <span>Chat</span>
+    </a>
+    <a class="rail-item" data-rail="agent-chat" href="#">
+      <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="10" rx="2"/><circle cx="12" cy="5" r="2"/><path d="M12 7v4"/><line x1="8" y1="16" x2="8" y2="16"/><line x1="16" y1="16" x2="16" y2="16"/></svg>
+      <span>Agent Chat</span>
+    </a>
+    <a class="rail-item active" data-rail="video" href="#">
+      <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2"/></svg>
+      <span>Video</span>
+      <span class="rail-dot"></span>
+    </a>
+    <a class="rail-item" data-rail="inbox" href="#">
+      <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 16 12 14 15 10 15 8 12 2 12"/><path d="M5.45 5.11 2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z"/></svg>
+      <span>Inbox</span>
+    </a>
+    <a class="rail-item" data-rail="campaign" href="#">
+      <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m3 11 18-5v12L3 14v-3z"/><path d="M11.6 16.8a3 3 0 1 1-5.8-1.6"/></svg>
+      <span>Campaign</span>
+    </a>
+    <a class="rail-item" data-rail="tasks" href="#">
+      <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="6" height="6" rx="1"/><path d="m3 17 2 2 4-4"/><path d="M13 6h8"/><path d="M13 12h8"/><path d="M13 18h8"/></svg>
+      <span>Tasks</span>
+    </a>
+   </div>
+
+   <!-- shown instead of the modules above, only on the Analytics page: the SAME rail, repurposed -->
+   <div id="railAnalyticsSection" hidden>
+    <button class="rail-item" data-analytics-tab="overview" type="button"><i class="bi bi-bar-chart"></i><span>Overview</span></button>
+    <button class="rail-item" data-analytics-tab="reports" type="button"><i class="bi bi-file-earmark-text"></i><span>Reports</span></button>
+    <div class="rail-divider" role="separator"></div>
+    <button class="rail-item" data-analytics-tab="boards" type="button"><i class="bi bi-grid-3x3-gap"></i><span>Boards</span></button>
+    <button class="rail-item" data-analytics-tab="live" type="button"><i class="bi bi-broadcast"></i><span>Live</span></button>
+    <button class="rail-item" data-analytics-tab="callbacks" type="button"><i class="bi bi-telephone-inbound"></i><span>Callbacks</span></button>
+    <button class="rail-item" data-analytics-tab="campaigns" type="button"><i class="bi bi-megaphone"></i><span>Campaigns</span></button>
+    <button class="rail-item" data-analytics-tab="speech" type="button"><i class="bi bi-mic"></i><span>Speech</span></button>
+    <button class="rail-item" data-analytics-tab="ai-wall" type="button"><i class="bi bi-stars"></i><span>AI Wall</span></button>
+    <button class="rail-item" data-analytics-tab="queue" type="button"><i class="bi bi-list-ol"></i><span>Queue</span></button>
+    <button class="rail-item" data-analytics-tab="video" type="button"><i class="bi bi-camera-video"></i><span>Video</span></button>
+    <button class="rail-item" data-analytics-tab="monitoring" type="button"><i class="bi bi-display"></i><span>Monitoring</span></button>
+    <button class="rail-item" data-analytics-tab="coaching" type="button"><i class="bi bi-person-video2"></i><span>Coaching</span></button>
+    <button class="rail-item" data-analytics-tab="agent-activity" type="button"><i class="bi bi-activity"></i><span>Agent Activity</span></button>
+   </div>
+  </nav>
+
+  <!-- ============ MEETINGS SIDEBAR ============ -->
+  <aside class="meetings-sidebar">
+    <!-- fixed at the top: the heading with the role switcher beside it -->
+    <div class="sidebar-header d-flex align-items-center justify-content-between gap-2">
+      <h2 class="sidebar-title">Meetings</h2>
+      <div class="position-relative flex-shrink-0" id="roleSwitchWrap">
+        <button class="rbac-pill" id="roleSwitchBtn" type="button" data-role="admin" data-bs-toggle="dropdown" data-bs-offset="30,6" data-bs-popper-config='{"strategy":"fixed"}' aria-expanded="false" aria-haspopup="menu" aria-label="Signed in as Admin (demo user). Switch user">
+          <span class="rbac-pill-icon" id="roleSwitchIcon" aria-hidden="true"></span>
+          <span id="roleSwitchLabel">Admin</span>
+          <svg class="chevron" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="6 9 12 15 18 9"/></svg>
+        </button>
+        <ul class="dropdown-menu dropdown-menu-end rbac-menu p-1" id="roleMenu" role="menu" aria-label="Demo user switcher"></ul>
+      </div>
+    </div>
+
+    <!-- the only part of the sidebar that scrolls (and only when it has to) -->
+    <div class="sidebar-body">
+    <ul class="sidebar-list">
+      <li>
+        <button class="sidebar-item active" data-view="upcoming" type="button">
+          <span class="sidebar-icon">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+          </span>
+          <span>Upcoming Meetings</span>
+        </button>
+      </li>
+      <li>
+        <button class="sidebar-item" data-view="ongoing" type="button">
+          <span class="sidebar-icon">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2"/></svg>
+          </span>
+          <span>Ongoing Meetings</span>
+        </button>
+      </li>
+      <li>
+        <button class="sidebar-item" data-view="invited" type="button">
+          <span class="sidebar-icon">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 12h-6l-2 3h-4l-2-3H2"/><path d="M5.45 5.11 2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z"/></svg>
+          </span>
+          <span>Invited Meetings</span>
+        </button>
+      </li>
+      <li>
+        <button class="sidebar-item" data-view="past" type="button">
+          <span class="sidebar-icon">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+          </span>
+          <span>Past Meetings</span>
+        </button>
+      </li>
+      <li>
+        <button class="sidebar-item" id="recordingsToggle" type="button" aria-expanded="false">
+          <span class="sidebar-icon">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="3"/></svg>
+          </span>
+          <span>Recordings</span>
+          <svg class="chevron" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+        </button>
+        <ul class="sidebar-sublist" id="recordingsSublist">
+          <li>
+            <button class="sidebar-subitem" data-view="rec-all" type="button">
+              <span class="sub-icon">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20h16a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.9a2 2 0 0 1-1.69-.9L9.6 3.9A2 2 0 0 0 7.93 3H4a2 2 0 0 0-2 2v13c0 1.1.9 2 2 2Z"/></svg>
+              </span>
+              <span>All Recordings</span>
+            </button>
+          </li>
+          <li>
+            <button class="sidebar-subitem" data-view="rec-mine" type="button">
+              <span class="sub-icon">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+              </span>
+              <span>My Recordings</span>
+            </button>
+          </li>
+          <li>
+            <button class="sidebar-subitem" data-view="rec-shared" type="button">
+              <span class="sub-icon">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
+              </span>
+              <span>Shared with me</span>
+            </button>
+          </li>
+        </ul>
+      </li>
+    </ul>
+    </div>
+
+    <!-- fixed at the bottom -->
+    <div class="demo-toggle-block sidebar-footer">
+      <label class="demo-toggle">
+        <input type="checkbox" id="demoDataToggle" />
+        <span class="demo-switch"></span>
+        <span class="demo-label">Demo data</span>
+      </label>
+      <div class="demo-extra" id="demoExtraControls">
+        <button type="button" class="demo-link" id="simulateLoading">Simulate loading</button>
+        <button type="button" class="demo-link" id="simulateError">Simulate error</button>
+      </div>
+    </div>
+  </aside>
+
+  <!-- ============ MAIN CONTENT ============ -->
+  <main class="main-content" id="mainContent">
+
+    <!-- ===== PAGES BEHIND THE TOP-BAR TABS (Dashboard, Directory, Analytics, Settings / Administration): filled by renderRoute() in section 2c ===== -->
+    <section class="view" id="view-page" hidden>
+      <div class="page-header-banner">
+        <div>
+          <h1 id="pageTitle">Dashboard</h1>
+          <p id="pageDesc"></p>
+        </div>
+        <div class="header-actions" id="pageUserSlot"></div>
+      </div>
+      <div id="pageBody"></div>
+    </section>
+
+    <!-- ===== UPCOMING VIEW ===== -->
+    <section class="view" id="view-upcoming" data-view-section>
+      <div class="vm-hero">
+        <div class="vm-hero-glow" aria-hidden="true"></div>
+        <div class="vm-hero-icon" aria-hidden="true">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2"/></svg>
+        </div>
+        <div class="vm-hero-main">
+          <h1>Video Meetings</h1>
+          <p>Connect securely with your team and clients. Start, schedule, or join high-quality video conferences instantly.</p>
+          <div class="vm-hero-meta">
+            <div class="avatar-stack vm-hero-avatars" id="vmHeroAvatars"></div>
+            <span class="vm-hero-sep"></span>
+            <span class="vm-hero-live" id="vmHeroLive"><span class="live-status-dot"></span>0 Live</span>
+            <span class="vm-hero-sep"></span>
+            <span class="vm-hero-stat">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+              <span id="vmHeroParticipants">0</span> Participants
+            </span>
+            <span class="vm-hero-sep"></span>
+            <span class="vm-hero-stat">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+              <span id="vmHeroLocation">—</span>
+            </span>
+          </div>
+        </div>
+        <div class="header-actions vm-hero-actions">
+          <button class="btn btn-primary" id="btnStartMeeting" type="button" data-perm="meeting.create" data-perm-mode="lock" data-perm-tip="Your role cannot start meetings.">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2"/></svg>
+            Start Meeting
+          </button>
+          <button class="btn btn-outline" id="btnJoinMeeting" type="button">+ Join</button>
+          <button class="btn btn-outline" id="btnScheduleMeeting" type="button" data-perm="meeting.create" data-perm-mode="lock" data-perm-tip="Your role cannot schedule meetings.">Schedule</button>
+        </div>
+      </div>
+
+      <div class="section-toolbar">
+        <div class="section-heading">
+          <h3>Upcoming Meetings</h3>
+          <span class="info-dot" title="Meetings scheduled for the future">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+          </span>
+          <span class="count-badge" id="upcomingCount">0 Meeting(S)</span>
+        </div>
+        <div class="view-toggle" id="upcomingViewToggle">
+          <button class="vt-btn active" data-list-view="list" type="button">List View</button>
+          <button class="vt-btn" data-list-view="calendar" type="button">Calendar View</button>
+        </div>
+      </div>
+
+      <div class="list-toolbar" id="upcomingToolbar" hidden>
+        <div class="search-box">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+          <input type="text" id="meetingSearchInput" placeholder="Search meetings..." />
+        </div>
+        <div class="toolbar-popover-wrap" id="filterWrap" data-perm="directory.view" data-perm-mode="hide" data-perm-tip="Your role has nothing to filter by.">
+          <button class="btn btn-toolbar" id="filterBtn" type="button" aria-expanded="false">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/></svg>
+            <span id="filterBtnLabel">Filter</span>
+            <span class="chevron"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></span>
+          </button>
+          <div class="popover filter-popover" id="filterPopover">
+            <div class="popover-title">Filter Meetings</div>
+            <div class="popover-group" id="filterLocationGroup">
+              <label for="filterLocation">Location</label>
+              <select id="filterLocation"></select>
+            </div>
+            <div class="popover-group" id="filterManagerGroup">
+              <label for="filterManager">Manager / Supervisor</label>
+              <select id="filterManager"></select>
+            </div>
+            <div class="popover-group" id="filterAgentGroup">
+              <label for="filterAgent">Agent</label>
+              <select id="filterAgent"></select>
+            </div>
+            <div class="popover-actions">
+              <button class="btn btn-ghost btn-sm" id="filterReset" type="button">Clear</button>
+              <button class="btn btn-primary btn-sm" id="filterApply" type="button">Apply</button>
+            </div>
+          </div>
+        </div>
+        <div class="toolbar-popover-wrap">
+          <button class="btn btn-toolbar" id="sortBtn" type="button" aria-expanded="false">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="4" y1="9" x2="14" y2="9"/><line x1="4" y1="15" x2="10" y2="15"/><line x1="4" y1="21" x2="7" y2="21"/><path d="m17 4 3 3-3 3"/><path d="M20 7H14"/></svg>
+            Sort
+            <span class="chevron"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></span>
+          </button>
+          <div class="popover" id="sortPopover">
+            <button class="popover-option" data-sort="soonest" type="button">Soonest First</button>
+            <button class="popover-option" data-sort="latest" type="button">Latest First</button>
+            <button class="popover-option" data-sort="recent" type="button">Recently Created</button>
+          </div>
+        </div>
+      </div>
+      <div class="filter-chips" id="filterChips" hidden></div>
+
+      <div id="upcomingListWrap">
+        <div class="meeting-list" id="upcomingList"></div>
+      </div>
+      <div class="calendar-wrap" id="calendarViewWrap" hidden></div>
+    </section>
+
+    <!-- ===== ONGOING VIEW ===== -->
+    <section class="view" id="view-ongoing" data-view-section hidden>
+      <div class="section-heading page-title-heading">
+        <h3>Ongoing Meetings</h3>
+        <span class="live-status-pill"><span class="live-status-dot"></span>Live</span>
+        <span class="count-badge" id="ongoingCount">0 Meeting(S)</span>
+      </div>
+
+      <div class="list-toolbar" id="ongoingToolbar" hidden>
+        <div class="search-box">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+          <input type="text" id="ongoingSearchInput" placeholder="Search meetings, host, or participant..." />
+          <button type="button" class="search-clear-btn d-none" id="ongoingSearchClear" aria-label="Clear search">&times;</button>
+        </div>
+        <div class="toolbar-popover-wrap" id="filterWrapOngoing" data-perm="directory.view" data-perm-mode="hide" data-perm-tip="Your role has nothing to filter by.">
+          <button class="btn btn-toolbar" id="filterBtnOngoing" type="button" aria-expanded="false">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/></svg>
+            <span id="filterBtnLabelOngoing">Filter</span>
+            <span class="chevron"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></span>
+          </button>
+          <div class="popover filter-popover" id="filterPopoverOngoing">
+            <div class="popover-title">Filter Meetings</div>
+            <div class="popover-group" id="filterLocationGroupOngoing">
+              <label for="filterLocationOngoing">Location</label>
+              <select id="filterLocationOngoing"></select>
+            </div>
+            <div class="popover-group" id="filterManagerGroupOngoing">
+              <label for="filterManagerOngoing">Manager / Supervisor</label>
+              <select id="filterManagerOngoing"></select>
+            </div>
+            <div class="popover-group" id="filterAgentGroupOngoing">
+              <label for="filterAgentOngoing">Agent</label>
+              <select id="filterAgentOngoing"></select>
+            </div>
+            <div class="popover-actions">
+              <button class="btn btn-ghost btn-sm" id="filterResetOngoing" type="button">Clear</button>
+              <button class="btn btn-primary btn-sm" id="filterApplyOngoing" type="button">Apply</button>
+            </div>
+          </div>
+        </div>
+        <div class="toolbar-popover-wrap">
+          <button class="btn btn-toolbar" id="ongoingSortBtn" type="button" aria-expanded="false">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="4" y1="9" x2="14" y2="9"/><line x1="4" y1="15" x2="10" y2="15"/><line x1="4" y1="21" x2="7" y2="21"/><path d="m17 4 3 3-3 3"/><path d="M20 7H14"/></svg>
+            Sort
+            <span class="chevron"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></span>
+          </button>
+          <div class="popover" id="ongoingSortPopover">
+            <button class="popover-option" data-ongoing-sort="time-asc" type="button">Meeting time — Earliest</button>
+            <button class="popover-option" data-ongoing-sort="time-desc" type="button">Meeting time — Latest</button>
+            <button class="popover-option" data-ongoing-sort="name-asc" type="button">Meeting name A–Z</button>
+            <button class="popover-option" data-ongoing-sort="name-desc" type="button">Meeting name Z–A</button>
+            <button class="popover-option" data-ongoing-sort="participants" type="button">Participant count</button>
+          </div>
+        </div>
+        <div class="view-toggle" id="ongoingViewToggle">
+          <button class="vt-btn active" data-ongoing-view="list" type="button">List View</button>
+          <button class="vt-btn icon-vt-btn" data-ongoing-view="compact" type="button" title="Compact View" aria-label="Compact View"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg></button>
+        </div>
+      </div>
+      <div class="filter-chips" id="filterChipsOngoing" hidden></div>
+
+      <div id="ongoingListWrap">
+        <div class="meeting-list" id="ongoingList"></div>
+      </div>
+      <div id="ongoingCompactWrap" hidden><div id="ongoingCompactGrid"></div></div>
+    </section>
+
+    <!-- ===== INVITED VIEW ===== -->
+    <section class="view" id="view-invited" data-view-section hidden>
+      <div class="section-heading page-title-heading">
+        <h3>Invited Meetings</h3>
+        <span class="info-dot"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg></span>
+        <span class="count-badge" id="invitedCount">0 Meeting(S)</span>
+      </div>
+      <div class="meeting-list" id="invitedList"></div>
+    </section>
+
+    <!-- ===== PAST VIEW ===== -->
+    <section class="view" id="view-past" data-view-section hidden>
+      <div class="section-heading page-title-heading">
+        <h3>Past Meetings</h3>
+        <span class="info-dot"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg></span>
+        <span class="count-badge" id="pastCount">0 Meeting(S)</span>
+      </div>
+      <div class="meeting-list" id="pastList"></div>
+    </section>
+
+    <!-- ===== RECORDINGS VIEWS ===== -->
+    <section class="view" id="view-recordings" data-view-section hidden>
+      <div class="recordings-header">
+        <div class="recordings-heading">
+          <span class="folder-icon">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20h16a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.9a2 2 0 0 1-1.69-.9L9.6 3.9A2 2 0 0 0 7.9 3H4a2 2 0 0 0-2 2v13c0 1.1.9 2 2 2Z"/></svg>
+          </span>
+          <div>
+            <div class="recordings-title-row">
+              <h3 id="recordingsTitle">All Recordings</h3>
+              <span class="info-dot"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg></span>
+            </div>
+            <p>Manage recordings, archives, and meeting transcripts.</p>
+          </div>
+        </div>
+        <div class="recordings-count" id="recordingsCount">0 items found</div>
+      </div>
+
+      <div class="list-toolbar">
+        <div class="search-box">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+          <input type="text" id="recordingSearchInput" placeholder="Search recordings..." />
+        </div>
+        <div class="toolbar-popover-wrap">
+          <button class="btn btn-toolbar" id="recFilterBtn" type="button" aria-expanded="false">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="4" y1="21" x2="4" y2="14"/><line x1="4" y1="10" x2="4" y2="3"/><line x1="12" y1="21" x2="12" y2="12"/><line x1="12" y1="8" x2="12" y2="3"/><line x1="20" y1="21" x2="20" y2="16"/><line x1="20" y1="12" x2="20" y2="3"/><line x1="1" y1="14" x2="7" y2="14"/><line x1="9" y1="8" x2="15" y2="8"/><line x1="17" y1="16" x2="23" y2="16"/></svg>
+            Filter
+            <span class="chevron"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></span>
+          </button>
+          <div class="popover filter-popover" id="recFilterPopover">
+            <div class="popover-group">
+              <label>Owner</label>
+              <select id="recFilterOwner"><option value="all">All Owners</option></select>
+            </div>
+            <div class="popover-group">
+              <label>Size</label>
+              <select id="recFilterSize"><option value="all">Any Size</option><option value="small">Under 15 MB</option><option value="large">15 MB and above</option></select>
+            </div>
+            <div class="popover-actions">
+              <button class="btn btn-ghost btn-sm" id="recFilterReset" type="button">Reset</button>
+              <button class="btn btn-primary btn-sm" id="recFilterApply" type="button">Apply</button>
+            </div>
+          </div>
+        </div>
+        <div class="toolbar-popover-wrap">
+          <button class="btn btn-toolbar" id="recSortBtn" type="button" aria-expanded="false">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="4" y1="9" x2="14" y2="9"/><line x1="4" y1="15" x2="10" y2="15"/><line x1="4" y1="21" x2="7" y2="21"/><path d="m17 4 3 3-3 3"/><path d="M20 7H14"/></svg>
+            Sort
+            <span class="chevron"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></span>
+          </button>
+          <div class="popover" id="recSortPopover">
+            <button class="popover-option" data-rec-sort="newest" type="button">Newest</button>
+            <button class="popover-option" data-rec-sort="oldest" type="button">Oldest</button>
+            <button class="popover-option" data-rec-sort="largest" type="button">Largest</button>
+            <button class="popover-option" data-rec-sort="smallest" type="button">Smallest</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="table-wrap">
+        <table class="recordings-table">
+          <thead>
+            <tr>
+              <th>NAME</th><th>SIZE</th><th>RECORDED ON</th><th>OWNER</th><th>MEMBERS</th><th>ACTIONS</th>
+            </tr>
+          </thead>
+          <tbody id="recordingsTbody"></tbody>
+        </table>
+      </div>
+      <div class="empty-state" id="recordingsEmpty" hidden>
+        <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20h16a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.9a2 2 0 0 1-1.69-.9L9.6 3.9A2 2 0 0 0 7.9 3H4a2 2 0 0 0-2 2v13c0 1.1.9 2 2 2Z"/></svg>
+        <h4>No recordings available!</h4>
+        <p>Recorded meetings will appear here once available.</p>
+      </div>
+    </section>
+
+  </main>
+</div>
+
+</div><!-- /.app -->
+
+<!-- ============ GLOBAL SEARCH / COMMAND PALETTE ============ -->
+<div class="modal-overlay" id="commandPaletteOverlay" hidden>
+  <div class="command-palette" role="dialog" aria-modal="true" aria-label="Global search">
+    <div class="cp-input-wrap">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      <input type="text" id="cpInput" placeholder="Search meetings, people, recordings..." autocomplete="off" />
+      <kbd>Esc</kbd>
+    </div>
+    <div class="cp-results" id="cpResults"></div>
+  </div>
+</div>
+
+<!-- ============ SCHEDULE MEETING MODAL ============ -->
+<div class="modal-overlay" id="scheduleModalOverlay" hidden>
+  <div class="modal modal-lg schedule-modal-v2" role="dialog" aria-modal="true" aria-labelledby="scheduleModalTitle">
+    <div class="modal-header schedule-modal-header">
+      <div class="schedule-modal-heading">
+        <span class="schedule-modal-icon">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/><line x1="12" y1="14" x2="12" y2="18"/><line x1="10" y1="16" x2="14" y2="16"/></svg>
+        </span>
+        <div>
+          <h3 id="scheduleModalTitle">Schedule New Meeting</h3>
+          <p class="schedule-modal-subtitle" id="scheduleModalSubtitle">Set up your meeting details and invite participants.</p>
+        </div>
+      </div>
+      <button class="modal-close" data-close-modal="scheduleModalOverlay" type="button" aria-label="Close">&times;</button>
+    </div>
+    <div class="modal-body">
+      <form id="scheduleForm" novalidate>
+        <input type="hidden" id="scheduleMeetingId" />
+        <select id="fieldHost" hidden></select>
+
+        <div class="form-group">
+          <label for="fieldTitle">Meeting Topic <span class="req">*</span></label>
+          <input type="text" id="fieldTitle" placeholder="Enter meeting topic" />
+          <span class="field-error" id="err-fieldTitle"></span>
+        </div>
+
+        <div class="form-row form-row-3">
+          <div class="form-group">
+            <label for="fieldCountry">Country (optional)</label>
+            <select id="fieldCountry">
+              <option value="">Narrow the timezone list</option>
+              <option value="IN">India</option>
+              <option value="US">United States</option>
+              <option value="GB">United Kingdom</option>
+              <option value="AE">United Arab Emirates</option>
+              <option value="AU">Australia</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="fieldTimezone">Timezone</label>
+            <select id="fieldTimezone">
+              <option value="GMT+5:30" selected>Asia/Calcutta (GMT+5:30)</option>
+              <option value="GMT+0:00">UTC (GMT+0:00)</option>
+              <option value="GMT-5:00">America/New_York (GMT-5:00)</option>
+              <option value="GMT+1:00">Europe/Berlin (GMT+1:00)</option>
+              <option value="GMT+4:00">Asia/Dubai (GMT+4:00)</option>
+              <option value="GMT+10:00">Australia/Sydney (GMT+10:00)</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="fieldMeetingType">Meeting Type</label>
+            <select id="fieldMeetingType">
+              <option value="Video">Video Meeting</option>
+              <option value="Audio + Video">Audio + Video</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="fieldDate">Meeting Date <span class="req">*</span></label>
+            <input type="date" id="fieldDate" />
+            <span class="field-error" id="err-fieldDate"></span>
+          </div>
+          <div class="form-group">
+            <label>Start Time <span class="req">*</span></label>
+            <div class="time-select-row">
+              <select id="fieldTimeHour" aria-label="Hour"></select>
+              <span class="time-sep">:</span>
+              <select id="fieldTimeMinute" aria-label="Minute"></select>
+              <select id="fieldTimeAmPm" aria-label="AM or PM"><option value="AM">AM</option><option value="PM">PM</option></select>
+            </div>
+            <span class="field-error" id="err-fieldTime"></span>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>Estimated Duration</label>
+          <div class="duration-pills" id="durationPills">
+            <button type="button" class="duration-pill" data-duration="15">15 min</button>
+            <button type="button" class="duration-pill" data-duration="30">30 min</button>
+            <button type="button" class="duration-pill" data-duration="45">45 min</button>
+            <button type="button" class="duration-pill" data-duration="60">1 hr</button>
+            <button type="button" class="duration-pill" data-duration="90">1:30 hr</button>
+            <button type="button" class="duration-pill" data-duration="120">2 hr</button>
+            <button type="button" class="duration-pill" data-duration="180">3 hr</button>
+          </div>
+          <input type="hidden" id="fieldDuration" value="15" />
+        </div>
+
+        <div class="form-group">
+          <label for="fieldDescription">Description (optional)</label>
+          <textarea id="fieldDescription" rows="3" maxlength="500" placeholder="Agenda, dial-in notes, links..."></textarea>
+          <span class="char-counter" id="descriptionCounter">0/500</span>
+        </div>
+
+        <div class="schedule-split-row">
+          <div class="schedule-options-col">
+            <h4 class="schedule-section-title">Meeting Options</h4>
+            <div class="toggle-row"><span>Allow join meeting before host</span><label class="switch"><input type="checkbox" id="fieldAllowBeforeHost" /><span class="switch-slider"></span></label></div>
+            <div class="toggle-row"><span>Email &amp; notification reminder</span><label class="switch"><input type="checkbox" id="fieldReminderToggle" checked /><span class="switch-slider"></span></label></div>
+            <div class="toggle-row"><span>Need Password to join meeting</span><label class="switch"><input type="checkbox" id="fieldPassword" /><span class="switch-slider"></span></label></div>
+          </div>
+          <div class="schedule-invite-col">
+            <h4 class="schedule-section-title">Invite Participants</h4>
+            <div class="participant-picker schedule-invite-picker" id="scheduleInvitePicker">
+              <input type="text" id="scheduleInviteInput" placeholder="Enter name or email address" />
+              <button type="button" class="schedule-invite-add-btn" id="scheduleInviteAddBtn" aria-label="Add participant">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="8.5" cy="7" r="4"/><line x1="20" y1="8" x2="20" y2="14"/><line x1="23" y1="11" x2="17" y2="11"/></svg>
+              </button>
+              <div class="picker-dropdown" id="scheduleInviteDropdown"></div>
+            </div>
+            <span class="field-error" id="err-scheduleInvite"></span>
+            <div class="chip-list" id="scheduleChips"></div>
+          </div>
+        </div>
+
+        <div class="collapse" id="fieldPasswordFields">
+          <div class="form-group schedule-password-group mb-0">
+            <label for="fieldPasswordInput">Meeting Password</label>
+            <div class="schedule-password-field">
+              <input type="password" id="fieldPasswordInput" autocomplete="off" aria-label="Meeting password" />
+              <div class="schedule-password-actions">
+                <button type="button" class="schedule-password-btn" id="fieldPasswordVisBtn" title="Show password" aria-label="Show password"><i class="bi bi-eye"></i></button>
+                <button type="button" class="schedule-password-btn" id="fieldPasswordGenBtn" title="Generate a new password" aria-label="Generate a new password"><i class="bi bi-arrow-repeat"></i></button>
+                <button type="button" class="schedule-password-btn" id="fieldPasswordCopyBtn" title="Copy password" aria-label="Copy password"><i class="bi bi-clipboard"></i></button>
+              </div>
+            </div>
+            <span class="field-error" id="err-fieldPasswordInput"></span>
+          </div>
+        </div>
+
+        <div class="collapsible" id="meetingSettingsCollapsible" data-perm="meeting.settings">
+          <button type="button" class="collapsible-trigger" id="meetingSettingsTrigger">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+            <span>More Settings</span>
+            <svg class="chevron" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+          </button>
+          <div class="collapsible-body" id="meetingSettingsBody" hidden>
+            <div class="form-row">
+              <div class="form-group">
+                <label for="fieldWhoCanJoin">Who can join?</label>
+                <select id="fieldWhoCanJoin">
+                  <option value="Anyone with the link">Anyone with the link</option>
+                  <option value="Invited participants only">Invited participants only</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label for="fieldRecurring">Recurring</label>
+                <select id="fieldRecurring">
+                  <option value="Does not repeat" selected>Does not repeat</option>
+                  <option value="Daily">Daily</option>
+                  <option value="Weekly">Weekly</option>
+                  <option value="Monthly">Monthly</option>
+                  <option value="Custom">Custom</option>
+                </select>
+              </div>
+            </div>
+            <div class="toggle-row"><span>Waiting room</span><label class="switch"><input type="checkbox" id="fieldWaitingRoom" checked /><span class="switch-slider"></span></label></div>
+            <div class="toggle-row"><span>Auto record meeting</span><label class="switch"><input type="checkbox" id="fieldAutoRecord" /><span class="switch-slider"></span></label></div>
+            <div class="form-group">
+              <label>Participant permissions</label>
+              <div class="perm-checks">
+                <label><input type="checkbox" id="permMic" checked /> Allow microphone</label>
+                <label><input type="checkbox" id="permCam" checked /> Allow camera</label>
+                <label><input type="checkbox" id="permScreen" /> Allow screen sharing</label>
+                <label><input type="checkbox" id="permChat" checked /> Allow chat</label>
+              </div>
+            </div>
+            <div class="toggle-row"><span>Recording permissions (participants can access the recording)</span><label class="switch"><input type="checkbox" id="fieldRecordingAccess" /><span class="switch-slider"></span></label></div>
+          </div>
+        </div>
+      </form>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-outline" data-close-modal="scheduleModalOverlay" type="button">Cancel</button>
+      <button class="btn btn-primary" id="scheduleSubmitBtn" type="button">Schedule Meeting</button>
+    </div>
+  </div>
+</div>
+
+<!-- ============ JOIN MEETING MODAL ============ -->
+<div class="modal-overlay" id="joinModalOverlay" hidden>
+  <div class="modal modal-sm" role="dialog" aria-modal="true" aria-labelledby="joinModalTitle">
+    <div class="modal-header">
+      <h3 id="joinModalTitle">Join Meeting</h3>
+      <button class="modal-close" data-close-modal="joinModalOverlay" type="button" aria-label="Close">&times;</button>
+    </div>
+    <div class="modal-body">
+      <div class="join-step" id="joinStepId">
+        <div class="form-group">
+          <label for="joinMeetingInput">Meeting ID or meeting link</label>
+          <input type="text" id="joinMeetingInput" placeholder="e.g. 123-456-789 or meet.mcm.example/abc123" />
+          <span class="field-error" id="err-joinMeetingInput"></span>
+        </div>
+      </div>
+      <div class="join-step" id="joinStepPassword" hidden>
+        <div class="join-password-notice">
+          <i class="bi bi-lock-fill"></i>
+          <div><strong>This meeting is password protected.</strong><span>Enter the password to continue.</span></div>
+        </div>
+        <div class="form-group">
+          <label for="joinPasswordInput">Meeting Password</label>
+          <div class="join-password-field">
+            <input type="password" id="joinPasswordInput" autocomplete="off" aria-label="Meeting password" />
+            <div class="schedule-password-actions">
+              <button type="button" class="schedule-password-btn" id="joinPasswordVisBtn" title="Show password" aria-label="Show password"><i class="bi bi-eye"></i></button>
+            </div>
+          </div>
+          <span class="field-error" id="err-joinPasswordInput"></span>
+        </div>
+        <p class="join-password-hint">Contact the meeting organizer if you don't have the password.</p>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-outline" data-close-modal="joinModalOverlay" type="button" id="joinCancelBtn">Cancel</button>
+      <button class="btn btn-outline" type="button" id="joinBackBtn" hidden><i class="bi bi-arrow-left"></i> Back</button>
+      <button class="btn btn-primary" id="joinMeetingSubmitBtn" type="button">Join Meeting</button>
+    </div>
+  </div>
+</div>
+
+<!-- ============ PRE-JOIN SCREEN ============ -->
+<div class="modal-overlay" id="prejoinModalOverlay" hidden>
+  <div class="modal modal-xl prejoin-v2" role="dialog" aria-modal="true" aria-labelledby="prejoinTitle">
+    <div class="modal-header">
+      <h3 id="prejoinTitle">Ready to join?</h3>
+      <button class="modal-close" data-close-modal="prejoinModalOverlay" type="button" aria-label="Close">&times;</button>
+    </div>
+    <div class="prejoin-v2-subheader">
+      <span class="prejoin-v2-crumb">Video Meetings <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg> Join Meeting</span>
+      <div class="prejoin-v2-idrow">
+        <span class="prejoin-v2-id">ID: <strong id="prejoinMeetingIdText">—</strong></span>
+        <button class="btn btn-outline btn-sm" id="prejoinCopyLinkBtn" type="button">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+          Copy link
+        </button>
+      </div>
+    </div>
+    <div class="modal-body prejoin-v2-body">
+      <div class="prejoin-v2-preview">
+        <div class="camera-preview-lg" id="prejoinCameraPreview">
+          <div class="camera-off-avatar" data-me-initials>VG</div>
+          <span class="preview-name-badge" data-me-name>Vivek Gupta</span>
+        </div>
+        <p class="prejoin-v2-hint">This preview is only visible to you. Nobody in the meeting sees it until you join.</p>
+      </div>
+      <div class="prejoin-v2-panel">
+        <h4>Audio &amp; video</h4>
+        <p class="prejoin-v2-sub">Pick the devices you want to use, then join the meeting.</p>
+
+        <div class="device-row">
+          <button class="control-btn active" id="prejoinMicBtn" type="button" title="Toggle microphone">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/></svg>
+          </button>
+          <div class="device-select-group">
+            <label>Microphone</label>
+            <select><option>Microphone Array (Intel® Smart Sound Technology)</option><option>Default - Microphone</option></select>
+          </div>
+        </div>
+        <div class="device-row">
+          <button class="control-btn active" id="prejoinCamBtn" type="button" title="Toggle camera">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M23 7l-7 5 7 5V7z"/><rect x="1" y="5" width="15" height="14" rx="2"/></svg>
+          </button>
+          <div class="device-select-group">
+            <label>Camera</label>
+            <select><option>Integrated Camera</option><option>USB HD Webcam</option></select>
+          </div>
+        </div>
+        <div class="device-row">
+          <button class="control-btn" id="prejoinSpeakerBtn" type="button" title="Speaker / device">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/></svg>
+          </button>
+          <div class="device-select-group">
+            <label>Speaker</label>
+            <select><option>Default - Speakers (Realtek(R) Audio)</option></select>
+          </div>
+        </div>
+        <button class="btn btn-outline btn-sm mic-test-btn" id="prejoinMicTestBtn" type="button">Start test</button>
+
+        <div class="prejoin-v2-meetinginfo">
+          <h4 id="prejoinMeetingTitle">Meeting Title</h4>
+          <p id="prejoinHost">Host: —</p>
+          <p id="prejoinTime">Scheduled: —</p>
+          <p class="prejoin-not-started" id="prejoinNotStarted" hidden>Meeting hasn't started yet.</p>
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-outline" data-close-modal="prejoinModalOverlay" type="button">Cancel</button>
+      <button class="btn btn-primary" id="prejoinJoinBtn" type="button">Join Meeting</button>
+    </div>
+  </div>
+</div>
+
+<!-- ============ START MEETING (PRE-JOIN) MODAL ============ -->
+<div class="modal-overlay" id="startModalOverlay" hidden>
+  <div class="modal modal-2xl lobby-modal" role="dialog" aria-modal="true" aria-labelledby="startModalTitle">
+
+    <div class="modal-header d-flex flex-wrap align-items-center gap-2 gap-md-3 px-3 px-md-4 py-2">
+      <div class="d-flex align-items-center gap-3 lobby-brand-col">
+        <span class="lobby-header-icon" aria-hidden="true">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2"/></svg>
+        </span>
+        <div class="lobby-min-0">
+          <h3 class="fs-5 fw-bold mb-0" id="startModalTitle">Video Meeting</h3>
+          <p class="small text-body-secondary mb-0">Check and adjust your audio, video, and background before joining</p>
+        </div>
+      </div>
+      <div class="lobby-meta d-flex align-items-center gap-2 order-3 order-md-0">
+        <input type="text" id="instantMeetingName" class="form-control form-control-sm lobby-name-input" placeholder="Meeting name" aria-label="Meeting name" />
+        <span class="badge rounded-pill lobby-id-badge fw-medium text-nowrap">ID <strong id="startMeetingIdText">—</strong></span>
+        <button class="btn btn-outline btn-sm" id="startCopyLinkBtn" type="button" title="Copy meeting link" aria-label="Copy meeting link">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+        </button>
+        <button class="btn btn-outline btn-sm" id="lobbyInvitePeopleBtn" type="button" title="Invite people" aria-label="Invite people">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="8.5" cy="7" r="4"/><line x1="20" y1="8" x2="20" y2="14"/><line x1="23" y1="11" x2="17" y2="11"/></svg>
+        </button>
+      </div>
+      <button class="modal-close" data-close-modal="startModalOverlay" type="button" aria-label="Close">&times;</button>
+    </div>
+
+    <div class="modal-body lobby-body p-0 d-lg-flex">
+      <div class="row g-0 flex-lg-nowrap w-100">
+
+        <!-- LEFT: preview + background (the preview is the flexible part: it keeps 16:9 and only gets shorter when the window is short) -->
+        <div class="col-12 col-lg-7 px-3 py-2 d-flex flex-column gap-2">
+          <div class="lobby-stage-wrap rounded-4 overflow-hidden shadow-sm">
+            <div class="lobby-stage" id="startCameraPreview" data-bg="none">
+              <div class="lobby-bg-layer"></div>
+              <video class="lobby-video lobby-video-main" id="lobbyVideo" autoplay muted playsinline disablepictureinpicture></video>
+              <div class="lobby-avatar">
+                <div class="camera-off-avatar" data-me-initials>VG</div>
+                <span class="small text-white-50" id="lobbyAvatarCaption" role="status"></span>
+              </div>
+
+              <span class="badge rounded-pill lobby-glass position-absolute top-0 start-0 m-3 z-2 d-flex align-items-center gap-2 fw-semibold" id="startPreviewCamStatusBadge"><span class="status-dot-sm good"></span> Camera is on</span>
+              <button class="lobby-glass lobby-fullscreen-btn position-absolute top-0 end-0 m-3 z-2" id="previewFullscreenBtn" type="button" title="Full screen preview" aria-label="Full screen preview">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"/></svg>
+              </button>
+
+              <div class="lobby-preview-controls" role="group" aria-label="Preview controls">
+                <button class="lobby-preview-ctrl lobby-toggle-ctrl active" id="startMicBtn" type="button" aria-pressed="true">
+                  <span class="lobby-ctrl-icon">
+                    <svg class="icon-on" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/></svg>
+                    <svg class="icon-off" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="1" y1="1" x2="23" y2="23"/><path d="M9 9v3a3 3 0 0 0 5.12 2.12M15 9.34V4a3 3 0 0 0-5.94-.6"/><path d="M17 16.95A7 7 0 0 1 5 12v-2m14 0v2a7 7 0 0 1-.11 1.23"/><line x1="12" y1="19" x2="12" y2="23"/></svg>
+                  </span>
+                  <span id="startMicLabel">Mic</span>
+                </button>
+                <button class="lobby-preview-ctrl lobby-toggle-ctrl active" id="startCamBtn" type="button" aria-pressed="true">
+                  <span class="lobby-ctrl-icon">
+                    <svg class="icon-on" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M23 7l-7 5 7 5V7z"/><rect x="1" y="5" width="15" height="14" rx="2"/></svg>
+                    <svg class="icon-off" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 16v1a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2h2m5.66 0H14a2 2 0 0 1 2 2v3.34l1 1L23 7v10"/><line x1="1" y1="1" x2="23" y2="23"/></svg>
+                  </span>
+                  <span id="startCamLabel">Camera</span>
+                </button>
+                <span class="lobby-ctrl-sep" aria-hidden="true"></span>
+                <button class="lobby-preview-ctrl" id="startPipBtn" type="button" aria-pressed="false" aria-label="Picture in Picture" title="Picture in Picture">
+                  <span class="lobby-ctrl-icon"><i class="bi bi-pip"></i></span>
+                  <span id="startPipLabel">PiP</span>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <section class="flex-shrink-0 pt-1" id="lobbyBgSection" aria-labelledby="lobbyBgTitle">
+            <h4 class="d-flex align-items-center gap-2 fs-6 fw-semibold mb-2" id="lobbyBgTitle">
+              <span class="lobby-section-icon"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-5-5L5 21"/></svg></span>
+              Background
+            </h4>
+            <div class="row row-cols-4 g-2 lobby-bg-row" id="lobbyBgThumbRow">
+              <div class="col"><button type="button" class="lobby-bg-thumb active" data-bg-thumb="none" aria-pressed="true"><span class="ratio ratio-4x3 d-block"><span class="lobby-bg-swatch swatch-none d-flex align-items-center justify-content-center"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="4.9" y1="4.9" x2="19.1" y2="19.1"/></svg></span></span><span class="lobby-bg-label">None</span></button></div>
+              <div class="col"><button type="button" class="lobby-bg-thumb" data-bg-thumb="blur" aria-pressed="false"><span class="ratio ratio-4x3 d-block"><span class="lobby-bg-swatch swatch-blur"></span></span><span class="lobby-bg-label">Blur</span></button></div>
+              <div class="col"><button type="button" class="lobby-bg-thumb" data-bg-thumb="office" aria-pressed="false"><span class="ratio ratio-4x3 d-block"><span class="lobby-bg-swatch swatch-office"></span></span><span class="lobby-bg-label">Office</span></button></div>
+              <div class="col"><button type="button" class="lobby-bg-thumb" data-bg-thumb="home" aria-pressed="false"><span class="ratio ratio-4x3 d-block"><span class="lobby-bg-swatch swatch-home"></span></span><span class="lobby-bg-label">Home</span></button></div>
+              <div class="col"><button type="button" class="lobby-bg-thumb" data-bg-thumb="classroom" aria-pressed="false"><span class="ratio ratio-4x3 d-block"><span class="lobby-bg-swatch swatch-classroom"></span></span><span class="lobby-bg-label">Classroom</span></button></div>
+              <div class="col"><button type="button" class="lobby-bg-thumb" data-bg-thumb="beach" aria-pressed="false"><span class="ratio ratio-4x3 d-block"><span class="lobby-bg-swatch swatch-beach"></span></span><span class="lobby-bg-label">Beach</span></button></div>
+              <div class="col"><button type="button" class="lobby-bg-thumb lobby-bg-thumb-add" id="lobbyAddImageBtn"><span class="ratio ratio-4x3 d-block"><span class="lobby-bg-swatch swatch-add d-flex align-items-center justify-content-center"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></span></span><span class="lobby-bg-label">Add Image</span></button></div>
+            </div>
+          </section>
+        </div>
+
+        <!-- RIGHT: devices + enhancements -->
+        <div class="col-12 col-lg-5 px-3 py-2 lobby-side d-lg-flex flex-lg-column">
+          <div class="card rounded-4 shadow-sm mb-2 flex-lg-grow-1">
+            <div class="card-body px-3 py-2 d-flex flex-column justify-content-between">
+              <div class="d-flex align-items-center justify-content-between gap-2 mb-2">
+                <h4 class="d-flex align-items-center gap-2 fs-6 fw-semibold mb-0">
+                  <span class="lobby-section-icon"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 18v-6a9 9 0 0 1 18 0v6"/><path d="M21 19a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3zM3 19a2 2 0 0 0 2 2h1a2 2 0 0 0 2-2v-3a2 2 0 0 0-2-2H3z"/></svg></span>
+                  Audio &amp; Video Devices
+                </h4>
+                <button class="btn btn-outline btn-sm text-nowrap" id="startTestDevicesBtn" type="button">Test Devices</button>
+              </div>
+
+              <div class="d-flex align-items-start gap-3 mb-2">
+                <span class="device-static-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/></svg></span>
+                <div class="flex-grow-1 lobby-min-0">
+                  <label class="form-label small fw-semibold mb-1" for="lobbyMicSelect">Microphone</label>
+                  <select class="form-select form-select-sm" id="lobbyMicSelect"><option>Microphone Array (Intel® Smart Sound Technology)</option><option>Default - Microphone</option></select>
+                  <div class="d-flex align-items-center gap-2 mt-1">
+                    <div class="audio-meter" id="audioMeter" aria-hidden="true">
+                      <span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span>
+                    </div>
+                    <span class="small d-inline-flex align-items-center gap-1 lobby-min-0 text-truncate" id="micTestStatus" role="status" aria-live="polite" data-mic-state="not-tested"><i class="bi bi-circle-fill text-body-secondary mic-test-icon" id="micTestIcon" aria-hidden="true"></i><span id="micTestText">Not tested</span></span>
+                  </div>
+                </div>
+              </div>
+
+              <div class="d-flex align-items-start gap-3 mb-2">
+                <span class="device-static-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M23 7l-7 5 7 5V7z"/><rect x="1" y="5" width="15" height="14" rx="2"/></svg></span>
+                <div class="flex-grow-1 lobby-min-0">
+                  <label class="form-label small fw-semibold mb-1" for="lobbyCamSelect">Camera</label>
+                  <div class="d-flex align-items-center gap-2">
+                    <select class="form-select form-select-sm" id="lobbyCamSelect"><option>Integrated Camera</option><option>USB HD Webcam</option></select>
+                    <span class="badge bg-primary-subtle text-primary" id="cameraHdBadge">HD</span>
+                  </div>
+                  <span class="small d-inline-flex align-items-center gap-1 lobby-min-0 text-truncate mt-1" id="camTestStatus" role="status" aria-live="polite" hidden><i class="bi bi-circle-fill text-body-secondary mic-test-icon" id="camTestIcon" aria-hidden="true"></i><span id="camTestText"></span></span>
+                </div>
+              </div>
+
+              <div class="d-flex align-items-start gap-3">
+                <span class="device-static-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/></svg></span>
+                <div class="flex-grow-1 lobby-min-0">
+                  <label class="form-label small fw-semibold mb-1" for="lobbySpeakerSelect">Speaker</label>
+                  <div class="d-flex align-items-center gap-2">
+                    <select class="form-select form-select-sm" id="lobbySpeakerSelect"><option>Default - Speakers (Realtek(R) Audio)</option></select>
+                    <button type="button" class="btn btn-outline btn-sm mic-test-btn" id="startSpeakerTestBtn">Test</button>
+                  </div>
+                  <span class="small d-inline-flex align-items-center gap-1 lobby-min-0 text-truncate mt-1" id="speakerTestStatus" role="status" aria-live="polite" hidden><i class="bi bi-circle-fill text-body-secondary mic-test-icon" id="speakerTestIcon" aria-hidden="true"></i><span id="speakerTestText"></span></span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="card rounded-4 shadow-sm mb-2" id="lobbySecurityCard">
+            <div class="card-body px-3 py-2">
+              <h4 class="d-flex align-items-center gap-2 fs-6 fw-semibold mb-0">
+                <span class="lobby-section-icon"><i class="bi bi-lock-fill"></i></span>
+                Meeting Security
+              </h4>
+              <div class="d-flex align-items-start justify-content-between gap-2 mt-2">
+                <div class="flex-grow-1">
+                  <label class="fw-semibold small d-block" for="lobbyPasswordToggle">Require meeting password</label>
+                  <span class="small text-body-secondary" id="lobbyPasswordHint">Protect your meeting with a password</span>
+                </div>
+                <div class="form-check form-switch mb-0 flex-shrink-0"><input class="form-check-input" type="checkbox" role="switch" id="lobbyPasswordToggle" /></div>
+              </div>
+              <div class="collapse" id="lobbyPasswordFields">
+                <label class="form-label small fw-semibold mb-1 mt-2" for="lobbyPasswordInput">Meeting Password</label>
+                <div class="d-flex align-items-center gap-2">
+                  <div class="lobby-password-field flex-grow-1">
+                    <input type="password" class="form-control form-control-sm" id="lobbyPasswordInput" value="Teloz@2026" autocomplete="off" aria-label="Meeting password" />
+                    <button class="lobby-password-eye" type="button" id="lobbyPasswordVisBtn" aria-label="Show password" title="Show password"><i class="bi bi-eye"></i></button>
+                  </div>
+                  <button class="btn btn-outline btn-sm text-nowrap" type="button" id="lobbyPasswordGenBtn" title="Generate a new password"><i class="bi bi-arrow-repeat me-1"></i>Generate</button>
+                </div>
+                <p class="small text-body-secondary d-flex align-items-start gap-2 mt-2 mb-0">
+                  <i class="bi bi-info-circle mt-1"></i><span>Participants will need this password to join the meeting.</span>
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <div class="card rounded-4 shadow-sm flex-lg-grow-1">
+            <div class="card-body px-3 py-2 d-flex flex-column justify-content-between">
+              <div class="d-flex align-items-center justify-content-between gap-2 mb-2">
+                <h4 class="d-flex align-items-center gap-2 fs-6 fw-semibold mb-0">
+                  <span class="lobby-section-icon"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l1.9 4.3L18 9l-4.1 1.7L12 15l-1.9-4.3L6 9l4.1-1.7L12 3z"/><path d="M5 19l.9 2 2 .9-2 .9-.9 2-.9-2-2-.9 2-.9.9-2z"/></svg></span>
+                  Video Enhancements
+                </h4>
+                <div class="position-relative">
+                  <button class="btn btn-outline btn-sm py-0 text-nowrap" type="button" id="lobbyFxToggle" data-bs-toggle="dropdown" data-bs-auto-close="outside" data-bs-popper-config='{"strategy":"fixed"}' aria-expanded="false" aria-haspopup="true" title="Fine-tune brightness, contrast, sharpness and more"><i class="bi bi-sliders me-1"></i>Adjust</button>
+                  <div class="dropdown-menu dropdown-menu-end fx-panel" id="lobbyFxPanel" role="group" aria-label="Video adjustments"></div>
+                </div>
+              </div>
+              <div class="row row-cols-1 row-cols-sm-2 g-2" id="lobbyEnhancements">
+                <div class="col d-flex align-items-start gap-2">
+                  <div class="flex-grow-1">
+                    <label class="fw-semibold small d-block" for="lobbyNoiseSuppression">Noise suppression</label>
+                    <span class="small text-body-secondary">Reduce background noise</span>
+                  </div>
+                  <div class="form-check form-switch mb-0 flex-shrink-0"><input class="form-check-input" type="checkbox" role="switch" id="lobbyNoiseSuppression" checked /></div>
+                </div>
+                <div class="col d-flex align-items-start gap-2">
+                  <div class="flex-grow-1">
+                    <label class="fw-semibold small d-block" for="lobbyTouchUp">Touch up my appearance</label>
+                    <span class="small text-body-secondary">Slightly enhance appearance</span>
+                  </div>
+                  <div class="form-check form-switch mb-0 flex-shrink-0"><input class="form-check-input" type="checkbox" role="switch" id="lobbyTouchUp" /></div>
+                </div>
+                <div class="col d-flex align-items-start gap-2">
+                  <div class="flex-grow-1">
+                    <label class="fw-semibold small d-block" for="lobbyAutoLighting">Auto adjust lighting</label>
+                    <span class="small text-body-secondary">Optimize for low light</span>
+                  </div>
+                  <div class="form-check form-switch mb-0 flex-shrink-0"><input class="form-check-input" type="checkbox" role="switch" id="lobbyAutoLighting" checked /></div>
+                </div>
+                <div class="col d-flex align-items-start gap-2">
+                  <div class="flex-grow-1">
+                    <label class="fw-semibold small d-block" for="lobbyMirrorVideo">Mirror my video</label>
+                    <span class="small text-body-secondary">Show a mirrored view</span>
+                  </div>
+                  <div class="form-check form-switch mb-0 flex-shrink-0"><input class="form-check-input" type="checkbox" role="switch" id="lobbyMirrorVideo" checked /></div>
+                </div>
+              </div>
+              <p class="small text-success d-flex align-items-center gap-2 mt-2 mb-0" id="lobbyEnhStatus" role="status" aria-live="polite">
+                <span class="status-dot-sm good"></span><span>Noise suppression enabled.</span>
+              </p>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <div class="modal-footer d-flex flex-wrap align-items-center justify-content-between gap-2 gap-md-3 px-4 py-2">
+      <div class="form-check mb-0">
+        <input class="form-check-input" type="checkbox" id="lobbyRememberSettings" />
+        <label class="form-check-label small" for="lobbyRememberSettings">Remember my settings for future meetings</label>
+      </div>
+      <div class="d-flex gap-2 flex-grow-1 flex-sm-grow-0">
+        <button class="btn btn-outline flex-fill" data-close-modal="startModalOverlay" type="button">Cancel</button>
+        <button class="btn btn-primary lobby-start-btn flex-fill" id="startMeetingSubmitBtn" type="button">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2"/></svg>
+          Start Meeting
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ LIVE MEETING ROOM ============ -->
+<div class="modal-overlay live-overlay" id="liveModalOverlay" hidden>
+  <div class="live-room d-flex flex-column" id="liveRoom" data-bs-theme="dark" role="dialog" aria-modal="true" aria-labelledby="liveMeetingTitle">
+
+    <!-- HEADER -->
+    <header class="live-header d-flex align-items-center gap-2 gap-md-3 px-3 py-2">
+      <div class="d-flex align-items-center gap-2 flex-shrink-0">
+        <span class="logo-mark" aria-hidden="true">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 8.82a15 15 0 0 1 20 0"/><path d="M5 12.859a10 10 0 0 1 14 0"/><path d="M8.5 16.429a5 5 0 0 1 7 0"/><line x1="12" y1="20" x2="12.01" y2="20"/></svg>
+        </span>
+        <span class="fw-bold fs-5 d-none d-sm-inline">Teloz</span>
+      </div>
+      <span class="live-divider d-none d-md-block" aria-hidden="true"></span>
+
+      <div class="live-min-0 flex-grow-1 position-relative">
+        <button class="live-title-btn d-flex align-items-center gap-1 fw-semibold" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Meeting menu">
+          <span class="text-truncate" id="liveMeetingTitle">Meeting</span><i class="bi bi-chevron-down small chevron"></i>
+        </button>
+        <ul class="dropdown-menu">
+          <li><button class="dropdown-item" type="button" data-live-action="details"><i class="bi bi-info-circle me-2"></i>Meeting details</button></li>
+          <li><button class="dropdown-item" type="button" data-live-action="copy-id"><i class="bi bi-hash me-2"></i>Copy meeting ID</button></li>
+        </ul>
+        <div class="live-subtitle small text-truncate d-flex align-items-center">
+          <span class="live-status"><span class="live-status-dot"></span>Live</span><span class="live-sep" aria-hidden="true">|</span><span id="liveParticipantCount">1 participant</span><span class="live-sep" aria-hidden="true">|</span><span id="liveMeetingTimer" class="live-tabular">00:00</span>
+        </div>
+      </div>
+
+      <div class="d-flex align-items-center gap-1 gap-md-2 flex-shrink-0">
+        <span class="live-rec d-none" id="liveRecBadge" role="status"><span class="live-rec-dot"></span><span id="liveRecLabel">REC</span> <span id="liveRecTimer" class="live-tabular">00:00</span></span>
+        <span class="live-flag d-none" id="liveTranscribeFlag" title="Live transcription"><i class="bi bi-file-earmark-text"></i><span class="d-none d-xl-inline" id="liveTranscribeText"></span></span>
+        <span class="live-flag d-none" id="liveShareLockFlag" title="Only the host can share"><i class="bi bi-person-lock"></i><span class="d-none d-xl-inline">Host-only sharing</span></span>
+        <span class="live-flag live-flag-warn d-none" id="liveLockFlag" title="Meeting locked"><i class="bi bi-lock-fill"></i><span class="d-none d-lg-inline">Locked</span></span>
+
+        <button class="live-pill" id="liveDataModeBtn" type="button" title="Using simulated participants and meeting activity">
+          <i class="bi bi-flask"></i><span class="d-none d-lg-inline" id="liveDataModeLabel">Demo Data</span><span class="live-pill-badge" id="liveDataModeBadge">ON</span>
+        </button>
+
+        <button class="live-pill d-none d-sm-inline-flex" id="liveShareLinkBtn" type="button" aria-label="Share link" data-perm="meeting.invite">
+          <i class="bi bi-link-45deg"></i><span class="d-none d-lg-inline">Share Link</span>
+        </button>
+
+        <div class="position-relative">
+          <button class="live-pill" id="liveLayoutBtn" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Layout">
+            <i class="bi bi-grid"></i><span class="d-none d-lg-inline">Layout</span><i class="bi bi-chevron-down small d-none d-sm-inline chevron"></i>
+          </button>
+          <ul class="dropdown-menu dropdown-menu-end" id="liveLayoutMenu">
+            <li><button class="dropdown-item d-flex align-items-center gap-2 active" type="button" data-live-layout="speaker"><i class="bi bi-person-video3"></i>Speaker View<i class="bi bi-check2 ms-auto live-check"></i></button></li>
+            <li><button class="dropdown-item d-flex align-items-center gap-2" type="button" data-live-layout="gallery"><i class="bi bi-grid-3x3-gap"></i>Gallery View<i class="bi bi-check2 ms-auto live-check"></i></button></li>
+            <li><button class="dropdown-item d-flex align-items-center gap-2" type="button" data-live-layout="focus"><i class="bi bi-aspect-ratio"></i>Focus View<i class="bi bi-check2 ms-auto live-check"></i></button></li>
+          </ul>
+        </div>
+
+        <div class="position-relative">
+          <button class="live-pill live-pill-icon" id="liveHeaderMoreBtn" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="More options">
+            <i class="bi bi-three-dots-vertical"></i>
+          </button>
+          <ul class="dropdown-menu dropdown-menu-end">
+            <li class="d-sm-none" data-perm="meeting.invite"><button class="dropdown-item" type="button" data-live-action="share-link"><i class="bi bi-link-45deg me-2"></i>Copy invite link</button></li>
+            <li><button class="dropdown-item" type="button" data-live-action="fullscreen"><i class="bi bi-fullscreen me-2"></i>Full screen</button></li>
+            <li><button class="dropdown-item" type="button" data-live-action="copy-id"><i class="bi bi-hash me-2"></i>Copy meeting ID</button></li>
+            <li><button class="dropdown-item" type="button" data-live-action="details"><i class="bi bi-info-circle me-2"></i>Meeting details</button></li>
+          </ul>
+        </div>
+
+        <button class="live-theme" id="liveThemeBtn" type="button" role="switch" aria-checked="false" aria-label="Switch to dark mode" title="Switch to dark mode">
+          <i class="bi bi-sun-fill live-theme-sun" aria-hidden="true"></i><i class="bi bi-moon-stars-fill live-theme-moon" aria-hidden="true"></i><span class="live-theme-thumb" aria-hidden="true"></span>
+        </button>
+
+        <span class="live-me d-none d-md-flex align-items-center gap-2 ps-1">
+          <span class="live-avatar-sm" aria-hidden="true" data-me-initials>VG</span><span class="d-none d-xl-inline small fw-medium" data-me-first>Vivek</span>
+        </span>
+      </div>
+    </header>
+
+    <!-- MAIN -->
+    <div class="live-main d-flex flex-grow-1 live-min-0">
+      <!-- PARTICIPANTS: compact vertical sidebar on the left (speaker view), scrolls when there are many -->
+      <div class="live-strip-wrap d-flex flex-column align-items-center gap-2 live-min-0 ps-2 ps-md-3 py-2 py-md-3" id="liveStripWrap">
+        <button class="live-nav d-none d-md-flex" id="liveStripPrev" type="button" aria-label="Previous participants"><i class="bi bi-chevron-up"></i></button>
+        <div class="live-strip d-flex flex-column gap-2 w-100 flex-grow-1 live-min-0" id="liveStrip" role="list"></div>
+        <button class="live-nav d-none d-md-flex" id="liveStripNext" type="button" aria-label="Next participants"><i class="bi bi-chevron-down"></i></button>
+      </div>
+
+      <section class="live-stage-col d-flex flex-column flex-grow-1 live-min-0 gap-2 gap-md-3 p-2 p-md-3" aria-label="Video">
+        <div class="live-main-area position-relative flex-grow-1 live-min-0" id="liveMainArea">
+          <div class="live-stage h-100" id="liveStage"></div>
+
+          <div class="live-share" id="screenShareStage" hidden>
+            <video id="liveShareVideo" autoplay muted playsinline></video>
+            <div class="live-share-banner">
+              <span class="live-share-dot"></span><strong>You are sharing your screen</strong><span class="live-share-info small" id="liveShareInfo"></span>
+              <button class="btn btn-danger btn-sm ms-1" id="stopShareBtn" type="button">Stop Sharing</button>
+            </div>
+          </div>
+
+          <div class="live-whiteboard" id="liveWhiteboard" hidden aria-label="Whiteboard">
+            <div class="live-wb-bar d-flex align-items-center flex-wrap gap-1 gap-md-2 p-2">
+              <div class="live-seg" role="group" aria-label="Tool">
+                <button type="button" class="active" data-wb-tool="pen" aria-pressed="true"><i class="bi bi-pencil-fill"></i><span class="d-none d-md-inline">Pen</span></button>
+                <button type="button" data-wb-tool="eraser" aria-pressed="false"><i class="bi bi-eraser-fill"></i><span class="d-none d-md-inline">Eraser</span></button>
+              </div>
+              <div class="d-flex align-items-center gap-1" role="group" aria-label="Colour">
+                <button type="button" class="live-wb-dot active" data-wb-color="#ffffff" style="--c:#ffffff" aria-label="White"></button>
+                <button type="button" class="live-wb-dot" data-wb-color="#60a5fa" style="--c:#60a5fa" aria-label="Blue"></button>
+                <button type="button" class="live-wb-dot" data-wb-color="#4ade80" style="--c:#4ade80" aria-label="Green"></button>
+                <button type="button" class="live-wb-dot" data-wb-color="#fbbf24" style="--c:#fbbf24" aria-label="Amber"></button>
+                <button type="button" class="live-wb-dot" data-wb-color="#f87171" style="--c:#f87171" aria-label="Red"></button>
+              </div>
+              <button type="button" class="live-pill" id="wbUndoBtn"><i class="bi bi-arrow-counterclockwise"></i><span class="d-none d-md-inline">Undo</span></button>
+              <button type="button" class="live-pill" id="wbClearBtn"><i class="bi bi-trash3"></i><span class="d-none d-md-inline">Clear</span></button>
+              <button type="button" class="live-pill ms-auto" id="wbCloseBtn"><i class="bi bi-x-lg"></i><span>Close</span></button>
+            </div>
+            <canvas id="liveWbCanvas"></canvas>
+          </div>
+
+          <button class="live-show-tile d-none" id="liveShowTileBtn" type="button"><i class="bi bi-eye"></i>Show my tile</button>
+          <video class="visually-hidden" id="livePipVideo" muted playsinline aria-hidden="true" tabindex="-1"></video>
+          <div class="live-captions fade" id="liveCaptions" aria-live="polite"><span class="live-cap-demo d-none" id="liveCaptionDemo">DEMO</span> <strong id="liveCaptionSpeaker"></strong> <span id="liveCaptionText"><span id="liveCaptionFinal"></span><span id="liveCaptionInterim" class="opacity-75"></span></span></div>
+        </div>
+      </section>
+
+      <!-- SIDE PANEL: inline column on desktop, Bootstrap offcanvas below md -->
+      <aside class="live-panel offcanvas-md offcanvas-end" id="livePanel" tabindex="-1" aria-label="Meeting panel">
+        <div class="live-panel-inner d-flex flex-column h-100">
+          <div class="d-flex align-items-center justify-content-between gap-2 ps-2 pe-3 live-panel-head">
+            <nav class="nav nav-underline flex-nowrap" role="tablist" aria-label="Panel">
+              <button class="nav-link" type="button" role="tab" data-live-tab="chat"><i class="bi bi-chat-dots me-1"></i>Chat</button>
+              <button class="nav-link" type="button" role="tab" data-live-tab="participants"><i class="bi bi-people me-1"></i>Participants <span id="livePanelCount">(1)</span></button>
+              <button class="nav-link" type="button" role="tab" data-live-tab="qa"><i class="bi bi-question-circle me-1"></i>Q&amp;A</button>
+            </nav>
+            <h2 class="fs-6 fw-semibold mb-0 px-2 py-3 d-none" id="liveMoreTitle"><i class="bi bi-three-dots me-2"></i>More options</h2>
+            <h2 class="fs-6 fw-semibold mb-0 px-2 py-3 d-none" id="liveAiTitle"><i class="bi bi-stars me-2"></i>Notes &amp; Coach<span class="live-ai-mode ms-2" id="aiModeBadge">LIVE</span></h2>
+            <button class="btn-close" id="liveSidePanelClose" type="button" aria-label="Close panel"></button>
+          </div>
+
+          <div class="live-side-search d-flex align-items-center gap-2 px-3 py-2 d-none" id="liveSideSearchWrap">
+            <i class="bi bi-search"></i>
+            <input type="text" class="live-plain-input flex-grow-1" id="liveParticipantSearch" placeholder="Search participants…" aria-label="Search participants" />
+          </div>
+
+          <div class="live-panel-body flex-grow-1 live-min-0 overflow-y-auto p-3" id="liveSidePanelBody"></div>
+
+          <!-- MORE OPTIONS: the same right-hand panel as Chat (one panel, one state: live.panel) -->
+          <div class="live-more-panel d-none flex-column flex-grow-1 live-min-0" id="liveMoreMenu" role="region" aria-label="More options">
+          <div class="live-more-scroll overflow-y-auto flex-grow-1">
+
+            <div class="card live-more-card d-sm-none"><div class="card-body p-2">
+              <div class="live-more-title mb-2">Quick controls</div>
+              <div class="d-flex flex-wrap gap-1 mb-2">
+                <button type="button" class="live-react" data-react="👍">👍</button><button type="button" class="live-react" data-react="❤️">❤️</button><button type="button" class="live-react" data-react="😂">😂</button><button type="button" class="live-react" data-react="👏">👏</button><button type="button" class="live-react" data-react="🎉">🎉</button><button type="button" class="live-react" data-react="😮">😮</button><button type="button" class="live-react" data-react="😄">😄</button>
+              </div>
+              <div class="d-flex flex-wrap gap-2">
+                <button type="button" class="live-mini-btn" data-live-action="hand"><i class="bi bi-hand-index-thumb"></i>Raise hand</button>
+                <button type="button" class="live-mini-btn" data-live-action="info"><i class="bi bi-info-circle"></i>Info</button>
+                <button type="button" class="live-mini-btn" data-live-action="rec-toggle" data-perm="record.control"><i class="bi bi-record-circle"></i><span data-rec-toggle-text>Start recording</span></button>
+              </div>
+            </div></div>
+
+            <h3 class="live-dlg-h live-more-sec">Meeting</h3>
+            <div class="card live-more-card"><div class="card-body p-2">
+              <div class="live-perm-row"><button type="button" class="live-row-btn" data-live-action="info">
+                <span class="live-more-icon"><i class="bi bi-info-circle"></i></span>
+                <span class="flex-grow-1 live-min-0 text-start"><span class="live-more-title d-block">Meeting information</span><span class="live-desc d-block">Meeting ID, link and duration</span></span>
+                <i class="bi bi-chevron-right live-muted"></i>
+              </button></div>
+              <div class="live-perm-row"><button type="button" class="live-row-btn" data-live-action="fullscreen">
+                <span class="live-more-icon"><i class="bi bi-fullscreen"></i></span>
+                <span class="flex-grow-1 live-min-0 text-start"><span class="live-more-title d-block">Full screen</span><span class="live-desc d-block">Fill your screen with the meeting</span></span>
+                <i class="bi bi-chevron-right live-muted"></i>
+              </button></div>
+            </div></div>
+
+            <div class="card live-more-card" data-perm="meeting.invite"><div class="card-body p-2">
+              <div class="d-flex align-items-start gap-2">
+                <span class="live-more-icon"><i class="bi bi-person-plus"></i></span>
+                <div class="flex-grow-1 live-min-0"><div class="live-more-title">Invite participants</div><div class="live-desc">Add more users to this meeting</div></div>
+              </div>
+              <div class="d-flex flex-wrap gap-2 mt-2">
+                <button type="button" class="live-mini-btn live-mini-primary" data-live-action="invite-members">Invite Members</button>
+                <button type="button" class="live-mini-btn live-mini-primary" data-live-action="invite-others">Invite Others</button>
+                <button type="button" class="live-mini-btn" id="liveCopyLinkBtn" data-live-action="copy-link"><i class="bi bi-copy"></i><span>Copy meeting link</span></button>
+              </div>
+            </div></div>
+
+            <div class="card live-more-card"><div class="card-body p-2">
+              <button type="button" class="live-row-btn" data-live-action="whiteboard">
+                <span class="live-more-icon"><i class="bi bi-easel"></i></span>
+                <span class="flex-grow-1 live-min-0 text-start"><span class="live-more-title d-block" id="liveWbTitle">Start whiteboard</span><span class="live-desc d-block">Open collaborative whiteboard</span></span>
+                <i class="bi bi-chevron-right live-muted"></i>
+              </button>
+            </div></div>
+
+            <div class="card live-more-card"><div class="card-body p-2">
+              <div class="d-flex align-items-start gap-2">
+                <span class="live-more-icon"><i class="bi bi-eye-slash"></i></span>
+                <div class="flex-grow-1 live-min-0"><div class="live-more-title" id="liveHideTitle">Hide my tile</div><div class="live-desc">Remove your own video from the gallery. Others still see you.</div></div>
+                <button type="button" class="live-mini-btn flex-shrink-0" id="liveHideTileBtn" data-live-action="hide-tile" aria-pressed="false">Hide</button>
+              </div>
+            </div></div>
+
+            <div class="card live-more-card" data-perm="meeting.lock"><div class="card-body p-2">
+              <div class="d-flex align-items-start gap-2">
+                <span class="live-more-icon live-more-icon-warn"><i class="bi bi-lock-fill"></i></span>
+                <div class="flex-grow-1 live-min-0"><label class="live-more-title d-block" for="liveLockSwitch">Lock meeting</label><div class="live-desc">Stop anyone else from joining, including the lobby</div></div>
+                <div class="form-check form-switch mb-0 flex-shrink-0"><input class="form-check-input" type="checkbox" role="switch" id="liveLockSwitch" /></div>
+              </div>
+            </div></div>
+
+            <div class="card live-more-card" data-perm="share.restrict"><div class="card-body p-2">
+              <div class="d-flex align-items-start gap-2">
+                <span class="live-more-icon"><i class="bi bi-person-lock"></i></span>
+                <div class="flex-grow-1 live-min-0"><label class="live-more-title d-block" for="liveOnlyShareSwitch">Only I can share</label><div class="live-desc">Stop participants from sharing their screen</div>
+                  <div class="live-desc mt-1 d-none" id="liveOnlyShareStatus"><span class="status-dot-sm good"></span> Participants can't share</div></div>
+                <div class="form-check form-switch mb-0 flex-shrink-0"><input class="form-check-input" type="checkbox" role="switch" id="liveOnlyShareSwitch" /></div>
+              </div>
+            </div></div>
+
+            <div class="card live-more-card" data-perm="participants.manage"><div class="card-body p-2">
+              <div class="d-flex align-items-start gap-2 mb-1">
+                <span class="live-more-icon"><i class="bi bi-shield-check"></i></span>
+                <div class="flex-grow-1 live-min-0"><div class="live-more-title">Participant permissions</div><div class="live-desc">What participants can do</div></div>
+              </div>
+              <div class="live-perm-row"><label for="livePermUnmute">Unmute themselves</label><div class="form-check form-switch mb-0"><input class="form-check-input" type="checkbox" role="switch" id="livePermUnmute" checked /></div></div>
+              <div class="live-perm-row"><label for="livePermChat">Send chat messages</label><div class="form-check form-switch mb-0"><input class="form-check-input" type="checkbox" role="switch" id="livePermChat" checked /></div></div>
+              <div class="live-perm-row"><label for="livePermReact">Send reactions</label><div class="form-check form-switch mb-0"><input class="form-check-input" type="checkbox" role="switch" id="livePermReact" checked /></div></div>
+            </div></div>
+
+            <div class="card live-more-card" data-perm="room.settings"><div class="card-body p-2">
+              <button type="button" class="live-row-btn" data-live-action="meeting-settings">
+                <span class="live-more-icon"><i class="bi bi-sliders"></i></span>
+                <span class="flex-grow-1 live-min-0 text-start"><span class="live-more-title d-block">Meeting settings</span><span class="live-desc d-block">Security, sharing and access options</span></span>
+                <i class="bi bi-chevron-right live-muted"></i>
+              </button>
+            </div></div>
+
+            <div class="card live-more-card" data-perm="room.participantManagement"><div class="card-body p-2">
+              <button type="button" class="live-row-btn" data-live-action="participants-manage">
+                <span class="live-more-icon"><i class="bi bi-people"></i></span>
+                <span class="flex-grow-1 live-min-0 text-start"><span class="live-more-title d-block">Participant management</span><span class="live-desc d-block">Mute, remove and manage who's in the meeting</span></span>
+                <i class="bi bi-chevron-right live-muted"></i>
+              </button>
+            </div></div>
+
+            <h3 class="live-dlg-h live-more-sec">Audio</h3>
+            <div class="card live-more-card"><div class="card-body p-2">
+              <button type="button" class="live-row-btn" data-live-action="audio-settings">
+                <span class="live-more-icon"><i class="bi bi-mic"></i></span>
+                <span class="flex-grow-1 live-min-0 text-start"><span class="live-more-title d-block">Audio settings</span><span class="live-desc d-block">Choose your microphone</span></span>
+                <i class="bi bi-chevron-right live-muted"></i>
+              </button>
+            </div></div>
+
+            <h3 class="live-dlg-h live-more-sec">Video</h3>
+            <div class="card live-more-card"><div class="card-body p-2">
+              <button type="button" class="live-row-btn" data-live-action="effects">
+                <span class="live-more-icon"><i class="bi bi-camera-video"></i></span>
+                <span class="flex-grow-1 live-min-0 text-start"><span class="live-more-title d-block">Video settings</span><span class="live-desc d-block">Background, effects and appearance</span></span>
+                <i class="bi bi-chevron-right live-muted"></i>
+              </button>
+            </div></div>
+
+            <div class="card live-more-card"><div class="card-body p-2">
+              <div class="d-flex align-items-start gap-2">
+                <span class="live-more-icon"><i class="bi bi-badge-hd-fill"></i></span>
+                <div class="flex-grow-1 live-min-0"><div class="live-more-title">Video quality</div><div class="live-desc">Adjust video quality for the meeting</div></div>
+              </div>
+              <div class="live-seg live-seg-purple mt-2" role="group" aria-label="Video quality">
+                <button type="button" class="active" data-quality="auto" aria-pressed="true">Auto</button>
+                <button type="button" data-quality="low" aria-pressed="false">Low</button>
+                <button type="button" data-quality="standard" aria-pressed="false">Standard</button>
+                <button type="button" data-quality="high" aria-pressed="false">High</button>
+              </div>
+            </div></div>
+
+            <h3 class="live-dlg-h live-more-sec">Accessibility</h3>
+            <div class="card live-more-card"><div class="card-body p-2">
+              <div class="d-flex align-items-start gap-2">
+                <span class="live-more-icon"><i class="bi bi-badge-cc-fill"></i></span>
+                <div class="flex-grow-1 live-min-0"><label class="live-more-title d-block" for="liveCaptionsSwitch">Captions</label><div class="live-desc">Show live captions over the video</div></div>
+                <div class="form-check form-switch mb-0 flex-shrink-0"><input class="form-check-input" type="checkbox" role="switch" id="liveCaptionsSwitch" /></div>
+              </div>
+              <div class="d-flex align-items-center gap-2 mt-2">
+                <label class="live-desc mb-0" for="liveCaptionLang">Caption language</label>
+                <select class="form-select form-select-sm live-select" id="liveCaptionLang"><option value="en">English</option><option value="hi">Hindi</option><option value="es">Spanish</option></select>
+              </div>
+              <div class="live-desc mt-1" id="liveCaptionNote"></div>
+            </div></div>
+
+            <div class="card live-more-card"><div class="card-body p-2">
+              <div class="d-flex align-items-start gap-2">
+                <span class="live-more-icon"><i class="bi bi-translate"></i></span>
+                <div class="flex-grow-1 live-min-0"><div class="live-more-title">Transcription language</div><div class="live-desc">Select a language for live transcription</div></div>
+              </div>
+              <div class="live-seg mt-2" role="group" aria-label="Transcription language">
+                <button type="button" class="active" data-transcribe="en" aria-pressed="true">English</button>
+                <button type="button" data-transcribe="hi" aria-pressed="false">Hindi</button>
+                <button type="button" data-transcribe="es" aria-pressed="false">Spanish</button>
+              </div>
+              <div class="live-desc mt-1">Selected: <strong id="liveTranscribeSel">English</strong> <span id="liveTranscribeStatus" role="status" aria-live="polite">· Off</span></div>
+            </div></div>
+
+            <h3 class="live-dlg-h live-more-sec">AI / Meeting Intelligence</h3>
+            <div class="card live-more-card"><div class="card-body p-2">
+              <div class="d-flex align-items-start gap-2 mb-1">
+                <span class="live-more-icon"><i class="bi bi-stars"></i></span>
+                <div class="flex-grow-1 live-min-0"><div class="live-more-title">Meeting Intelligence</div><div class="live-desc">Powers Notes &amp; Coach. The mode is always shown in its header.</div></div>
+              </div>
+              <div class="live-perm-row"><label for="miModeLive"><strong><span class="live-ai-dotlive"></span>Live</strong><span class="live-desc d-block">Uses actual meeting data</span></label><input class="form-check-input" type="radio" name="miMode" id="miModeLive" value="live" checked /></div>
+              <div class="live-perm-row"><label for="miModeDemo"><strong><span class="live-ai-dotlive demo"></span>Demo</strong><span class="live-desc d-block">Simulates a sample meeting so every feature can be tried</span></label><input class="form-check-input" type="radio" name="miMode" id="miModeDemo" value="demo" /></div>
+              <div class="live-desc mt-1" id="miProvider"></div>
+            </div></div>
+
+            <h3 class="live-dlg-h live-more-sec">Demo / Testing</h3>
+            <div class="card live-more-card"><div class="card-body p-2">
+              <div class="d-flex align-items-start gap-2">
+                <span class="live-more-icon"><i class="bi bi-magic"></i></span>
+                <div class="flex-grow-1 live-min-0"><label class="live-more-title d-block" for="liveSampleSwitch">Sample data</label><div class="live-desc">Fills Notes &amp; Coach with a whole sample meeting at once, marked DEMO, to see how everything looks. Turn it off to go back to your real meeting: live transcription and the coach keep working in real time.</div></div>
+                <div class="form-check form-switch mb-0 flex-shrink-0"><input class="form-check-input" type="checkbox" role="switch" id="liveSampleSwitch" /></div>
+              </div>
+              <div class="d-flex flex-wrap gap-1 mt-2"><button type="button" class="live-mini-btn" id="demoClearBtn"><i class="bi bi-trash3"></i>Clear Demo Data</button></div>
+            </div></div>
+            <div class="card live-more-card"><div class="card-body p-2">
+              <div class="d-flex align-items-start gap-2">
+                <span class="live-more-icon"><i class="bi bi-play-circle"></i></span>
+                <div class="flex-grow-1 live-min-0"><label class="live-more-title d-block" for="liveDemoModeSwitch">Demo mode</label><div class="live-desc">Plays the sample meeting “Product Roadmap Review” with simulated people. It stays apart from your real meeting and is never saved.</div></div>
+                <div class="form-check form-switch mb-0 flex-shrink-0"><input class="form-check-input" type="checkbox" role="switch" id="liveDemoModeSwitch" /></div>
+              </div>
+              <div class="live-desc mt-2 mb-1">Demo speed</div>
+              <div class="live-seg" role="group" aria-label="Demo speed"><button type="button" data-demo-speed="slow" aria-pressed="false">Slow</button><button type="button" class="active" data-demo-speed="normal" aria-pressed="true">Normal</button><button type="button" data-demo-speed="fast" aria-pressed="false">Fast</button></div>
+              <div class="d-flex flex-wrap gap-1 mt-2">
+                <button type="button" class="live-mini-btn live-mini-primary" id="demoStartBtn"><i class="bi bi-play-fill"></i>Start Demo</button>
+                <button type="button" class="live-mini-btn" id="demoPauseBtn"><i class="bi bi-pause-fill"></i>Pause Demo</button>
+                <button type="button" class="live-mini-btn" id="demoResumeBtn"><i class="bi bi-skip-end-fill"></i>Resume Demo</button>
+                <button type="button" class="live-mini-btn" id="demoResetBtn"><i class="bi bi-arrow-counterclockwise"></i>Reset Demo</button>
+              </div>
+              <div class="live-desc mt-1" id="demoStatus" role="status"></div>
+            </div></div>
+            <div class="card live-more-card"><div class="card-body p-2">
+              <div class="d-flex align-items-start gap-2">
+                <span class="live-more-icon"><i class="bi bi-chat-square-text"></i></span>
+                <div class="flex-grow-1 live-min-0"><label class="live-more-title d-block" for="liveDemoCaptionsSwitch">Demo captions</label><div class="live-desc">Cycles sample captions marked DEMO. While on, they replace live captions on screen.</div></div>
+                <div class="form-check form-switch mb-0 flex-shrink-0"><input class="form-check-input" type="checkbox" role="switch" id="liveDemoCaptionsSwitch" /></div>
+              </div>
+            </div></div>
+
+          </div>
+        </div>
+
+          <!-- AI NOTES & COACH: the same right-hand panel (live.panel = "ai-notes"). The four Bootstrap tabs are built once and only shown / hidden. -->
+          <div class="live-ai-panel d-none flex-column flex-grow-1 live-min-0" id="liveAiPanel" role="region" aria-label="Notes and Coach">
+            <nav class="nav nav-underline flex-nowrap live-ai-tabs px-2" role="tablist" aria-label="Notes and Coach sections">
+              <button class="nav-link active" type="button" role="tab" id="aiTabTranscript" title="Real-time conversation" data-bs-toggle="tab" data-bs-target="#aiPaneTranscript" aria-controls="aiPaneTranscript" aria-selected="true">Transcript</button>
+              <button class="nav-link" type="button" role="tab" id="aiTabNotes" title="Your meeting notes" data-bs-toggle="tab" data-bs-target="#aiPaneNotes" aria-controls="aiPaneNotes" aria-selected="false">Notes</button>
+              <button class="nav-link" type="button" role="tab" id="aiTabPlaybook" title="Meeting agenda and progress" data-bs-toggle="tab" data-bs-target="#aiPanePlaybook" aria-controls="aiPanePlaybook" aria-selected="false">Playbook</button>
+              <button class="nav-link" type="button" role="tab" id="aiTabCoach" title="Real-time meeting guidance" data-bs-toggle="tab" data-bs-target="#aiPaneCoach" aria-controls="aiPaneCoach" aria-selected="false">Live Coach</button>
+            </nav>
+            <div class="live-ai-banner d-none" id="aiDemoBanner" role="note"><i class="bi bi-exclamation-triangle-fill"></i><span><strong>DEMO</strong> · a simulated meeting. Nothing here is real meeting data, and none of it is saved.</span><button type="button" class="live-mini-btn ms-auto flex-shrink-0" data-ai-act="sample-off"><i class="bi bi-broadcast"></i>Back to Live</button></div>
+            <div class="tab-content flex-grow-1 live-min-0">
+
+              <div class="tab-pane active" id="aiPaneTranscript" role="tabpanel" aria-labelledby="aiTabTranscript" tabindex="0">
+                <div class="live-ai-bar px-3 py-2">
+                  <div class="d-flex align-items-center gap-2">
+                    <span class="live-ai-wave" id="aiTrWave" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></span>
+                    <span class="live-ai-status flex-grow-1 live-min-0 text-truncate" id="aiTrStatus" role="status" aria-live="polite">Transcription off</span>
+                    <select class="form-select form-select-sm live-select" id="aiTrLang" aria-label="Transcription language"><option value="en">English</option><option value="hi">Hindi</option><option value="es">Spanish</option></select>
+                  </div>
+                  <div class="d-flex align-items-center flex-wrap gap-1 mt-2">
+                    <button type="button" class="live-mini-btn live-mini-primary" id="aiTrToggle"><i class="bi bi-play-fill"></i><span>Start transcription</span></button>
+                    <button type="button" class="live-mini-btn d-none" id="aiTrSample" title="Play the next line of the demo"><i class="bi bi-plus-lg"></i>Add sample</button>
+                    <span class="ms-auto d-flex gap-1">
+                      <button type="button" class="live-icon-btn d-none" id="aiTrClear" title="Reset demo" aria-label="Reset demo"><i class="bi bi-arrow-counterclockwise"></i></button>
+                      <button type="button" class="live-icon-btn" data-ai-act="tr-download" title="Download transcript" aria-label="Download transcript"><i class="bi bi-download"></i></button>
+                    </span>
+                  </div>
+                  <div class="live-ai-search d-flex align-items-center gap-2 mt-2"><i class="bi bi-search"></i><input type="search" class="live-plain-input flex-grow-1" id="aiTrSearch" placeholder="Search transcript…" aria-label="Search transcript" autocomplete="off" /></div>
+                </div>
+                <p class="live-empty mb-0" id="aiTrEmpty">No transcript yet.</p>
+                <div class="live-ai-list flex-grow-1 live-min-0 overflow-y-auto px-3 pb-2" id="aiTrList"></div>
+                <div class="live-ai-foot px-3 py-2 d-flex flex-wrap align-items-center gap-2" id="aiTrFoot">
+                  <span class="live-desc">Topics<span data-src class="ms-1"></span></span><span class="d-flex flex-wrap gap-1" id="aiTrTopics"></span>
+                  <button type="button" class="live-mini-btn ms-auto" data-ai-act="review-q" id="aiTrQ">0 open questions</button>
+                </div>
+              </div>
+
+              <div class="tab-pane" id="aiPaneNotes" role="tabpanel" aria-labelledby="aiTabNotes" tabindex="0">
+                <div class="live-ai-scroll overflow-y-auto flex-grow-1 live-min-0 p-3 d-flex flex-column gap-3">
+                  <section>
+                    <label class="live-desc d-block mb-1" for="aiNotesText">Your meeting notes</label>
+                    <textarea class="form-control form-control-sm live-ai-input" id="aiNotesText" rows="6" placeholder="Type meeting notes here… they're saved on this device for this meeting."></textarea>
+                    <div class="d-flex align-items-center flex-wrap gap-2 mt-2">
+                      <span class="live-desc" id="aiWords">0 words</span><span class="live-desc" id="aiSaved" role="status" aria-live="polite">✓ Saved on this device</span>
+                      <span class="ms-auto d-flex gap-1">
+                        <button type="button" class="live-mini-btn" data-ai-act="stamp"><i class="bi bi-clock"></i>Add timestamp</button>
+                        <button type="button" class="live-icon-btn" data-ai-act="notes-download" title="Download notes" aria-label="Download notes"><i class="bi bi-download"></i></button>
+                        <button type="button" class="live-icon-btn" data-ai-act="notes-clear" title="Clear notes" aria-label="Clear notes"><i class="bi bi-eraser"></i></button>
+                      </span>
+                    </div>
+                  </section>
+                  <section>
+                    <div class="live-dlg-h d-flex align-items-center gap-2"><i class="bi bi-stars"></i>AI Assist <span class="fw-normal text-lowercase">(using transcript)</span><span class="live-ai-off ms-auto" id="aiAssistBadge">NOT CONFIGURED</span></div>
+                    <div class="d-flex flex-wrap gap-1">
+                      <button type="button" class="live-mini-btn" data-ai-act="ai" data-kind="summary" title="Generate a meeting summary"><i class="bi bi-card-text"></i>Summarize</button>
+                      <button type="button" class="live-mini-btn" data-ai-act="ai" data-kind="points"><i class="bi bi-list-stars"></i>Key Points</button>
+                      <button type="button" class="live-mini-btn" data-ai-act="ai" data-kind="actions"><i class="bi bi-check2-square"></i>Action Items</button>
+                      <button type="button" class="live-mini-btn" data-ai-act="ai" data-kind="decisions"><i class="bi bi-flag"></i>Decisions</button>
+                    </div>
+                    <div class="live-ai-result mt-2 d-none" id="aiResult" role="status" aria-live="polite"></div>
+                  </section>
+                  <details class="live-ai-sec" id="aiSecActions" open><summary>Action items <span class="badge rounded-pill text-bg-secondary live-ai-count">0</span></summary>
+                    <div class="live-desc fw-semibold mb-1 d-flex align-items-center gap-1"><span id="aiSugActionsCount"></span><span data-src class="ms-1"></span></div>
+                    <ul class="list-unstyled mb-2" id="aiActionsSug"></ul>
+                    <ul class="live-ai-ul list-unstyled mb-2" id="aiActions" data-empty="No confirmed action items yet."></ul>
+                    <form class="input-group input-group-sm" id="aiActionForm" autocomplete="off"><input type="text" class="form-control live-ai-input" id="aiActionInput" maxlength="160" placeholder="Add an action item…" aria-label="Add an action item" /><button class="btn btn-outline-primary" type="submit">Add</button></form>
+                  </details>
+                  <details class="live-ai-sec" id="aiSecDecisions" open><summary>Decisions <span class="badge rounded-pill text-bg-secondary live-ai-count">0</span></summary>
+                    <div class="live-desc fw-semibold mb-1 d-flex align-items-center gap-1"><span id="aiSugDecisionsCount"></span><span data-src class="ms-1"></span></div>
+                    <ul class="list-unstyled mb-2" id="aiDecisionsSug"></ul>
+                    <ul class="live-ai-ul list-unstyled mb-2" id="aiDecisions" data-empty="No decisions yet."></ul>
+                    <form class="input-group input-group-sm" id="aiDecisionForm" autocomplete="off"><input type="text" class="form-control live-ai-input" id="aiDecisionInput" maxlength="160" placeholder="Add a decision…" aria-label="Add a decision" /><button class="btn btn-outline-primary" type="submit">Add</button></form>
+                  </details>
+                  <details class="live-ai-sec" id="aiSecQuestions" open><summary>Open questions <span class="badge rounded-pill text-bg-secondary live-ai-count">0</span></summary>
+                    <ul class="live-ai-ul list-unstyled mb-0" id="aiQuestions" data-empty="No open questions."></ul>
+                  </details>
+                  <details class="live-ai-sec" id="aiSecRadar"><summary>Follow-up radar <span class="badge rounded-pill text-bg-secondary live-ai-count">0</span></summary>
+                    <ul class="live-ai-ul list-unstyled mb-1" id="aiRadar" data-empty="Nothing to follow up on so far."></ul>
+                    <div class="live-desc">Suggestions only: nothing becomes an action item until you add it.</div>
+                  </details>
+                  <details class="live-ai-sec" id="aiSecMemory"><summary>Meeting memory <span class="badge rounded-pill text-bg-secondary live-ai-count">0</span></summary>
+                    <div class="live-desc mb-1">This meeting only<span data-src class="ms-1"></span></div>
+                    <div id="aiMemory"></div>
+                  </details>
+                  <details class="live-ai-sec" id="aiSecWrap"><summary>Meeting wrap-up <span class="badge rounded-pill text-bg-secondary live-ai-count">0</span></summary>
+                    <div id="aiWrap"></div>
+                  </details>
+                </div>
+              </div>
+
+              <div class="tab-pane" id="aiPanePlaybook" role="tabpanel" aria-labelledby="aiTabPlaybook" tabindex="0">
+                <div class="live-ai-scroll overflow-y-auto flex-grow-1 live-min-0 p-3 pb-2">
+                  <div class="live-desc mb-2">Meeting agenda &amp; progress</div>
+                  <div class="d-flex align-items-center justify-content-between"><span class="live-more-title">Meeting playbook</span><span class="live-more-title" id="aiPbCount">0/0</span></div>
+                  <div class="progress live-ai-thin mt-1 mb-2" id="aiPbBar" role="progressbar" aria-label="Agenda progress" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><div class="progress-bar" id="aiPbFill" style="width:0%"></div></div>
+                  <div id="aiPbHint"></div>
+                  <ul class="list-unstyled d-flex flex-column gap-1 mb-0" id="aiPlaybook"></ul>
+                  <div class="live-dlg-h mt-3 d-flex align-items-center gap-2">Topic detection <span class="fw-normal text-lowercase">(from transcript)</span><span data-src class="ms-1"></span></div>
+                  <ul class="list-unstyled mb-0" id="aiTopicList"></ul>
+                  <div class="live-desc" id="aiTopicEmpty">No topics yet. They appear once the same words come up more than once.</div>
+                </div>
+                <form class="input-group input-group-sm p-3 pt-2 flex-shrink-0" id="aiPbForm" autocomplete="off"><input type="text" class="form-control live-ai-input" id="aiPbInput" maxlength="80" placeholder="Add an agenda item…" aria-label="Add an agenda item" /><button class="btn btn-primary" type="submit" aria-label="Add agenda item"><i class="bi bi-plus-lg"></i></button></form>
+              </div>
+
+              <div class="tab-pane" id="aiPaneCoach" role="tabpanel" aria-labelledby="aiTabCoach" tabindex="0">
+                <div class="live-ai-scroll overflow-y-auto flex-grow-1 live-min-0 p-3 d-flex flex-column gap-3">
+                  <div>
+                    <div class="d-flex align-items-center justify-content-between gap-2"><span class="live-more-title"><i class="bi bi-stars me-1 text-primary"></i>Live Coach</span><button type="button" class="live-mini-btn" id="aiCoachToggle"><i class="bi bi-power"></i>Turn off coach</button></div>
+                    <div class="live-desc mt-1">Real-time meeting guidance · <span id="aiCoachStatus" role="status">Rule-based · Not transcribing</span></div>
+                  </div>
+                  <div class="live-ai-result d-none" id="aiCoachOff">Coach is off. Transcript, Notes and Playbook keep working.</div>
+                  <div class="d-flex flex-column gap-2" id="aiCoachList"></div>
+                  <div class="live-desc" id="aiCoachEmpty">No tips right now. The coach only speaks up when something is worth your attention.</div>
+                  <section id="aiBalance" class="d-none"><div class="live-dlg-h d-flex align-items-center gap-1">Speaker balance<span data-src class="ms-1"></span></div><div class="d-flex flex-column gap-1" data-rows></div><div class="live-desc mt-1">Speaking time from the meeting's own speaking indicators.</div></section>
+                  <section><div class="live-dlg-h d-flex align-items-center gap-1">Meeting health<span data-src class="ms-1"></span></div><div class="live-ai-health" id="aiHealth"></div></section>
+                  <p class="live-desc text-center mb-0">Tips are rule-based, from the transcript, your agenda and the room's activity. They are not AI-generated.</p>
+                </div>
+              </div>
+
+            </div>
+          </div>
+
+          <div class="live-composer p-3" id="liveComposer">
+            <div class="d-flex align-items-center gap-2 mb-2 small" id="liveToRow">
+              <span class="text-body-secondary">To:</span>
+              <div class="dropup position-relative">
+                <button class="live-to-btn" id="liveToBtn" type="button" data-bs-toggle="dropdown" aria-expanded="false" data-bs-popper-config='{"strategy":"fixed"}'><span id="liveToLabel">Everyone</span><i class="bi bi-chevron-down chevron"></i></button>
+                <ul class="dropdown-menu live-to-menu" id="liveToMenu"></ul>
+              </div>
+            </div>
+            <div class="d-flex align-items-center gap-2">
+              <div class="live-composer-box d-flex align-items-center flex-grow-1 live-min-0 ps-3 pe-1">
+                <input type="text" class="live-plain-input flex-grow-1 live-min-0" id="liveChatInput" placeholder="Type a message…" aria-label="Message" autocomplete="off" />
+                <input type="file" class="d-none" id="liveFileInput" />
+                <button class="live-icon-btn" id="liveAttachBtn" type="button" aria-label="Attach file"><i class="bi bi-paperclip"></i></button>
+                <div class="dropup">
+                  <button class="live-icon-btn" id="liveEmojiBtn" type="button" data-bs-toggle="dropdown" data-bs-auto-close="outside" data-bs-popper-config='{"strategy":"fixed"}' aria-expanded="false" aria-label="Insert emoji"><i class="bi bi-emoji-smile"></i></button>
+                  <div class="dropdown-menu dropdown-menu-end live-emoji-menu p-2" id="liveEmojiMenu">
+                    <button type="button" class="live-react" data-emoji="😀">😀</button><button type="button" class="live-react" data-emoji="😂">😂</button><button type="button" class="live-react" data-emoji="👍">👍</button><button type="button" class="live-react" data-emoji="❤️">❤️</button><button type="button" class="live-react" data-emoji="🎉">🎉</button><button type="button" class="live-react" data-emoji="👏">👏</button><button type="button" class="live-react" data-emoji="🙏">🙏</button><button type="button" class="live-react" data-emoji="🔥">🔥</button>
+                  </div>
+                </div>
+              </div>
+              <button class="live-send" id="liveChatSendBtn" type="button" aria-label="Send"><i class="bi bi-send-fill"></i></button>
+            </div>
+            <p class="live-note small mb-0 mt-2 d-none" id="liveComposerNote"></p>
+          </div>
+
+          <div class="p-3" id="liveInviteBar" hidden data-perm="meeting.invite">
+            <button class="btn btn-primary w-100" id="liveInviteBtn" type="button"><i class="bi bi-person-plus me-2"></i>Invite People</button>
+          </div>
+        </div>
+      </aside>
+    </div>
+
+    <!-- CONTROL BAR -->
+    <footer class="live-toolbar d-flex align-items-center justify-content-center gap-1 gap-sm-2 px-2 px-md-3 py-2" role="toolbar" aria-label="Meeting controls">
+      <button class="live-tool d-none d-sm-flex" id="liveInfoBtn" type="button" data-live-action="info">
+        <i class="bi bi-info-circle"></i><span class="live-tool-label d-none d-lg-block">Info</span>
+      </button>
+      <span class="live-tool-sep d-none d-sm-block" aria-hidden="true"></span>
+
+      <div class="live-split d-flex">
+        <button class="live-tool active" id="liveMicBtn" type="button" aria-pressed="true">
+          <i class="bi bi-mic-fill"></i><span class="live-tool-label d-none d-lg-block" id="liveMicLabel">Mute</span>
+        </button>
+        <div class="dropup d-none d-md-block">
+          <button class="live-caret" id="liveMicCaret" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Choose microphone"><i class="bi bi-chevron-up"></i></button>
+          <ul class="dropdown-menu live-device-menu" id="liveMicMenu"></ul>
+        </div>
+      </div>
+      <div class="live-split d-flex">
+        <button class="live-tool active" id="liveCamBtn" type="button" aria-pressed="true">
+          <i class="bi bi-camera-video-fill"></i><span class="live-tool-label d-none d-lg-block" id="liveCamLabel">Stop Video</span>
+        </button>
+        <div class="dropup d-none d-md-block">
+          <button class="live-caret" id="liveCamCaret" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Choose camera"><i class="bi bi-chevron-up"></i></button>
+          <ul class="dropdown-menu live-device-menu" id="liveCamMenu"></ul>
+        </div>
+      </div>
+      <div class="live-split d-none d-sm-flex">
+        <button class="live-tool" id="liveScreenBtn" type="button" aria-pressed="false">
+          <i class="bi bi-box-arrow-up"></i><span class="live-tool-label d-none d-lg-block" id="liveScreenLabel">Share Screen</span>
+        </button>
+        <div class="dropup d-none d-md-block">
+          <button class="live-caret" id="liveShareCaret" type="button" data-bs-toggle="dropdown" data-bs-auto-close="outside" aria-expanded="false" aria-label="Screen share options"><i class="bi bi-chevron-up"></i></button>
+          <ul class="dropdown-menu live-device-menu" id="liveShareMenu">
+            <li><h6 class="dropdown-header live-menu-h">Share</h6></li>
+            <li><button class="dropdown-item d-flex align-items-center gap-2" type="button" data-share-surface="monitor"><i class="bi bi-display"></i>Entire Screen</button></li>
+            <li><button class="dropdown-item d-flex align-items-center gap-2" type="button" data-share-surface="window"><i class="bi bi-window"></i>Window</button></li>
+            <li><button class="dropdown-item d-flex align-items-center gap-2" type="button" data-share-surface="browser"><i class="bi bi-window-stack"></i>Browser Tab</button></li>
+            <li><hr class="dropdown-divider" /></li>
+            <li class="px-3 py-1"><div class="form-check form-switch d-flex align-items-center justify-content-between ps-0 mb-0"><label class="form-check-label small" for="liveShareAudio"><i class="bi bi-volume-up me-2"></i>Share system audio</label><input class="form-check-input ms-3 mt-0" type="checkbox" role="switch" id="liveShareAudio" /></div><div class="live-desc mt-1" id="liveShareAudioHint">Included when the source supports it</div></li>
+          </ul>
+        </div>
+      </div>
+
+      <span class="live-tool-sep" aria-hidden="true"></span>
+
+      <button class="live-tool" id="liveParticipantsBtn" type="button" aria-pressed="false" aria-label="Participants">
+        <i class="bi bi-people-fill"></i><span class="live-tool-label d-none d-lg-block">Participants</span><span class="live-count" id="liveParticipantBadge">1</span>
+      </button>
+      <button class="live-tool" id="liveChatBtn" type="button" aria-pressed="false">
+        <i class="bi bi-chat-dots-fill"></i><span class="live-tool-label d-none d-lg-block">Chat</span>
+      </button>
+      <button class="live-tool" id="liveAiBtn" type="button" aria-pressed="false" aria-controls="livePanel" aria-label="AI Notes">
+        <i class="bi bi-stars"></i><span class="live-tool-label d-none d-lg-block">AI Notes</span>
+      </button>
+      <div class="dropup d-none d-sm-block">
+        <button class="live-tool" id="liveReactBtn" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Reactions">
+          <i class="bi bi-emoji-smile"></i><span class="live-tool-label d-none d-lg-block">Reactions</span>
+        </button>
+        <div class="dropdown-menu live-react-menu p-2" id="liveReactMenu">
+          <div class="d-flex gap-1">
+            <button type="button" class="live-react" data-react="👍" aria-label="Thumbs up">👍</button><button type="button" class="live-react" data-react="❤️" aria-label="Heart">❤️</button><button type="button" class="live-react" data-react="😂" aria-label="Laugh">😂</button><button type="button" class="live-react" data-react="👏" aria-label="Clap">👏</button><button type="button" class="live-react" data-react="🎉" aria-label="Celebrate">🎉</button><button type="button" class="live-react" data-react="😮" aria-label="Surprised">😮</button><button type="button" class="live-react" data-react="😄" aria-label="Smile">😄</button>
+          </div>
+        </div>
+      </div>
+      <button class="live-tool" id="liveRaiseHandBtn" type="button" aria-pressed="false" aria-label="Raise hand" title="Raise hand">
+        <i class="bi bi-hand-index-thumb"></i><span class="live-tool-label d-none d-lg-block" id="liveHandLabel">Raise hand</span>
+      </button>
+      <div class="dropup d-none d-sm-block" data-perm="record.control">
+        <button class="live-tool" id="liveRecordBtn" type="button" aria-label="Start recording" title="Start recording">
+          <i class="bi bi-record-circle"></i><span class="live-tool-label d-none d-lg-block" id="liveRecordLabel">Record</span>
+        </button>
+        <ul class="dropdown-menu live-device-menu" id="liveRecordMenu">
+          <li><button class="dropdown-item d-flex align-items-center gap-2" type="button" data-rec="pause"><i class="bi bi-pause-fill"></i><span data-rec-pause-text>Pause recording</span></button></li>
+          <li><button class="dropdown-item d-flex align-items-center gap-2 text-danger" type="button" data-rec="stop"><i class="bi bi-stop-fill"></i>Stop recording</button></li>
+        </ul>
+      </div>
+      <div class="dropup">
+        <button class="live-tool" id="liveMoreBtn" type="button" aria-pressed="false" aria-controls="livePanel" aria-label="More options">
+          <i class="bi bi-three-dots"></i><span class="live-tool-label d-none d-lg-block">More</span>
+        </button>
+
+
+      </div>
+
+      <span class="live-tool-sep" aria-hidden="true"></span>
+      <button class="live-leave" id="liveEndBtn" type="button" aria-label="Leave meeting">
+        <i class="bi bi-telephone-x-fill"></i><span class="d-none d-sm-inline">Leave</span>
+      </button>
+    </footer>
+
+    <!-- DIALOGS (in-room, dark; the app's own .modal styles are light) -->
+    <div class="live-scrim" id="liveScrim" data-live-close-dialog></div>
+
+    <section class="live-dialog card" id="dlgEffects" role="dialog" aria-modal="true" aria-labelledby="dlgEffectsTitle" tabindex="-1">
+      <div class="card-header d-flex align-items-center justify-content-between px-3 py-3">
+        <h2 class="fs-6 fw-semibold mb-0" id="dlgEffectsTitle">Background &amp; effects</h2>
+        <button class="btn-close" type="button" data-live-close-dialog aria-label="Close"></button>
+      </div>
+      <div class="card-body live-dialog-body overflow-y-auto p-3">
+        <h3 class="live-dlg-h">Backgrounds</h3>
+        <div class="row row-cols-4 g-2" id="liveBgRow">
+          <div class="col"><button type="button" class="live-bg-thumb active" data-live-bg="none" aria-pressed="true"><span class="ratio ratio-4x3 d-block"><span class="lobby-bg-swatch swatch-none d-flex align-items-center justify-content-center"><i class="bi bi-slash-circle"></i></span></span><span class="lobby-bg-label">None</span></button></div>
+          <div class="col"><button type="button" class="live-bg-thumb" data-live-bg="blur" aria-pressed="false"><span class="ratio ratio-4x3 d-block"><span class="lobby-bg-swatch swatch-blur"></span></span><span class="lobby-bg-label">Blur</span></button></div>
+          <div class="col"><button type="button" class="live-bg-thumb" data-live-bg="office" aria-pressed="false"><span class="ratio ratio-4x3 d-block"><span class="lobby-bg-swatch swatch-office"></span></span><span class="lobby-bg-label">Office</span></button></div>
+          <div class="col"><button type="button" class="live-bg-thumb" data-live-bg="home" aria-pressed="false"><span class="ratio ratio-4x3 d-block"><span class="lobby-bg-swatch swatch-home"></span></span><span class="lobby-bg-label">Home</span></button></div>
+          <div class="col"><button type="button" class="live-bg-thumb" data-live-bg="classroom" aria-pressed="false"><span class="ratio ratio-4x3 d-block"><span class="lobby-bg-swatch swatch-classroom"></span></span><span class="lobby-bg-label">Classroom</span></button></div>
+          <div class="col"><button type="button" class="live-bg-thumb" data-live-bg="beach" aria-pressed="false"><span class="ratio ratio-4x3 d-block"><span class="lobby-bg-swatch swatch-beach"></span></span><span class="lobby-bg-label">Beach</span></button></div>
+          <div class="col"><button type="button" class="live-bg-thumb" id="liveBgAdd"><span class="ratio ratio-4x3 d-block"><span class="lobby-bg-swatch swatch-add d-flex align-items-center justify-content-center"><i class="bi bi-plus-lg"></i></span></span><span class="lobby-bg-label">Add Image</span></button></div>
+        </div>
+        <h3 class="live-dlg-h mt-3">Effects</h3>
+        <div class="live-perm-row"><label for="liveFxTouchUp"><i class="bi bi-stars me-2"></i>Touch up appearance</label><div class="form-check form-switch mb-0"><input class="form-check-input" type="checkbox" role="switch" id="liveFxTouchUp" /></div></div>
+        <div class="live-perm-row"><label for="liveFxLight"><i class="bi bi-brightness-high me-2"></i>Auto adjust lighting</label><div class="form-check form-switch mb-0"><input class="form-check-input" type="checkbox" role="switch" id="liveFxLight" checked /></div></div>
+        <div class="live-perm-row"><label for="liveFxMirror"><i class="bi bi-symmetry-vertical me-2"></i>Mirror video</label><div class="form-check form-switch mb-0"><input class="form-check-input" type="checkbox" role="switch" id="liveFxMirror" checked /></div></div>
+        <div class="live-perm-row"><label for="liveFxNoise"><i class="bi bi-soundwave me-2"></i>Noise suppression</label><div class="form-check form-switch mb-0"><input class="form-check-input" type="checkbox" role="switch" id="liveFxNoise" checked /></div></div>
+        <div class="live-perm-row"><span><i class="bi bi-sliders me-2"></i>Adjustments</span><button class="btn btn-sm btn-outline-secondary" type="button" data-bs-toggle="collapse" data-bs-target="#liveFxPanel" aria-expanded="false" aria-controls="liveFxPanel">Adjust</button></div>
+        <div class="collapse mt-2" id="liveFxPanel" role="group" aria-label="Video adjustments"></div>
+        <p class="small live-muted d-flex align-items-center gap-2 mt-3 mb-0" id="liveFxStatus" role="status" aria-live="polite"></p>
+      </div>
+    </section>
+
+    <section class="live-dialog card" id="dlgInfo" role="dialog" aria-modal="true" aria-labelledby="dlgInfoTitle" tabindex="-1">
+      <div class="card-header d-flex align-items-center justify-content-between px-3 py-3">
+        <h2 class="fs-6 fw-semibold mb-0" id="dlgInfoTitle">Meeting information</h2>
+        <button class="btn-close" type="button" data-live-close-dialog aria-label="Close"></button>
+      </div>
+      <div class="card-body live-dialog-body overflow-y-auto p-3">
+        <dl class="live-info mb-3">
+          <div><dt>Meeting name</dt><dd id="infoName">—</dd></div>
+          <div><dt>Meeting ID</dt><dd id="infoId">—</dd></div>
+          <div><dt>Meeting link</dt><dd class="text-truncate" id="infoLink">—</dd></div>
+          <div><dt>Host</dt><dd id="infoHost">—</dd></div>
+          <div><dt>Started at</dt><dd id="infoStarted">—</dd></div>
+          <div><dt>Duration</dt><dd class="live-tabular" id="infoDuration">—</dd></div>
+        </dl>
+        <div class="d-flex flex-wrap gap-2">
+          <button type="button" class="live-mini-btn live-mini-primary" id="infoCopyLink"><i class="bi bi-link-45deg"></i><span>Copy meeting link</span></button>
+          <button type="button" class="live-mini-btn" id="infoCopyId"><i class="bi bi-hash"></i><span>Copy meeting ID</span></button>
+        </div>
+      </div>
+    </section>
+
+    <section class="live-dialog live-dialog-sm card" id="dlgConfirm" role="alertdialog" aria-modal="true" aria-labelledby="dlgConfirmTitle" aria-describedby="dlgConfirmText" tabindex="-1">
+      <div class="card-body p-4">
+        <h2 class="fs-5 fw-semibold mb-1" id="dlgConfirmTitle">Are you sure?</h2>
+        <p class="text-body-secondary mb-3" id="dlgConfirmText"></p>
+        <div class="d-flex justify-content-end gap-2">
+          <button type="button" class="live-btn" id="dlgConfirmCancel">Cancel</button>
+          <button type="button" class="live-btn live-btn-primary" id="dlgConfirmOk">Confirm</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- non-dismissible: the host ended the meeting, closing for everyone on a real countdown (see startMeetingEndedCountdown) -->
+    <section class="live-dialog live-dialog-sm card text-center" id="dlgMeetingEnded" role="alertdialog" aria-modal="true" aria-labelledby="dlgEndedTitle" aria-describedby="dlgEndedText" tabindex="-1">
+      <div class="card-body p-4">
+        <h2 class="fs-5 fw-semibold mb-2" id="dlgEndedTitle">Meeting ended</h2>
+        <p class="text-body-secondary mb-1" id="dlgEndedText">The host has ended this meeting.</p>
+        <p class="text-body-secondary mb-2">This meeting will close in</p>
+        <div class="display-5 fw-bold mb-3" id="dlgEndedCountdown">5</div>
+        <p class="text-body-secondary small mb-0">Please leave or save anything you need before the meeting ends.</p>
+      </div>
+    </section>
+  </div>
+</div>
+
+<!-- ============ END / LEAVE MEETING CONFIRM (text and buttons follow the role, see openEndDialog) ============ -->
+<div class="modal-overlay" id="endMeetingConfirmOverlay" hidden>
+  <div class="modal modal-confirm" role="dialog" aria-modal="true" aria-labelledby="endConfirmTitle">
+    <button class="modal-close" data-close-modal="endMeetingConfirmOverlay" type="button" aria-label="Close">&times;</button>
+    <div class="modal-body confirm-body">
+      <h3 id="endConfirmTitle">Please confirm</h3>
+      <p id="endConfirmText">Are you sure you want to leave this meeting?</p>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-outline" id="endCancelBtn" data-close-modal="endMeetingConfirmOverlay" type="button">Cancel</button>
+      <button class="btn btn-outline" id="leaveMeetingBtn" type="button">Leave Meeting</button>
+      <button class="btn btn-danger" id="confirmEndMeetingBtn" type="button">End for all</button>
+    </div>
+  </div>
+</div>
+
+<!-- ============ MEETING DETAILS DRAWER ============ -->
+<div class="modal-overlay drawer-overlay" id="detailsDrawerOverlay" hidden>
+  <aside class="drawer" role="dialog" aria-modal="true" aria-labelledby="detailsDrawerTitle">
+    <div class="drawer-header">
+      <h3 id="detailsDrawerTitle">Meeting Details</h3>
+      <button class="modal-close" data-close-modal="detailsDrawerOverlay" type="button" aria-label="Close">&times;</button>
+    </div>
+    <div class="drawer-tabs">
+      <button class="drawer-tab active" data-drawer-tab="overview" type="button">Overview</button>
+      <button class="drawer-tab" data-drawer-tab="participants" type="button">Participants</button>
+      <button class="drawer-tab" data-drawer-tab="settings" type="button">Settings</button>
+    </div>
+    <div class="drawer-body" id="drawerBody"></div>
+    <div class="drawer-footer" id="drawerFooter"></div>
+  </aside>
+</div>
+
+<!-- ============ RESCHEDULE MODAL ============ -->
+<div class="modal-overlay" id="rescheduleModalOverlay" hidden>
+  <div class="modal modal-sm" role="dialog" aria-modal="true">
+    <div class="modal-header">
+      <h3>Reschedule Meeting</h3>
+      <button class="modal-close" data-close-modal="rescheduleModalOverlay" type="button" aria-label="Close">&times;</button>
+    </div>
+    <div class="modal-body">
+      <div class="current-schedule-box">
+        <span>Current</span>
+        <strong id="rescheduleCurrent">—</strong>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label for="rescheduleDate">New Date</label>
+          <input type="date" id="rescheduleDate" />
+        </div>
+        <div class="form-group">
+          <label for="rescheduleTime">New Time</label>
+          <input type="time" id="rescheduleTime" />
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-outline" data-close-modal="rescheduleModalOverlay" type="button">Cancel</button>
+      <button class="btn btn-primary" id="confirmRescheduleBtn" type="button">Reschedule Meeting</button>
+    </div>
+  </div>
+</div>
+
+<!-- ============ CANCEL MEETING CONFIRM ============ -->
+<div class="modal-overlay" id="cancelMeetingConfirmOverlay" hidden>
+  <div class="modal modal-confirm" role="dialog" aria-modal="true">
+    <div class="modal-body confirm-body">
+      <h3>Cancel Meeting?</h3>
+      <p>Are you sure you want to cancel this meeting? Participants may receive a cancellation notification.</p>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-outline" data-close-modal="cancelMeetingConfirmOverlay" type="button">Keep Meeting</button>
+      <button class="btn btn-danger" id="confirmCancelMeetingBtn" type="button">Cancel Meeting</button>
+    </div>
+  </div>
+</div>
+
+<!-- ============ DELETE MEETING CONFIRM ============ -->
+<div class="modal-overlay" id="deleteMeetingConfirmOverlay" hidden>
+  <div class="modal modal-confirm" role="dialog" aria-modal="true">
+    <div class="modal-body confirm-body">
+      <h3>Delete Meeting?</h3>
+      <p id="deleteMeetingText">This meeting will be permanently removed. This action cannot be undone.</p>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-outline" data-close-modal="deleteMeetingConfirmOverlay" type="button">Cancel</button>
+      <button class="btn btn-danger" id="confirmDeleteMeetingBtn" type="button">Delete Meeting</button>
+    </div>
+  </div>
+</div>
+
+<!-- ============ INVITE PARTICIPANTS MODAL ============ -->
+<div class="modal-overlay" id="inviteModalOverlay" hidden>
+  <div class="modal modal-lg" role="dialog" aria-modal="true">
+    <div class="modal-header">
+      <h3>Invite Participants</h3>
+      <button class="modal-close" data-close-modal="inviteModalOverlay" type="button" aria-label="Close">&times;</button>
+    </div>
+    <div class="modal-body">
+      <div class="invite-status-list" id="inviteStatusList" hidden></div>
+      <div class="form-group">
+        <label>Internal Members</label>
+        <div class="participant-picker" id="inviteParticipantPicker">
+          <div class="chip-list" id="inviteParticipantChips"></div>
+          <input type="text" id="inviteParticipantSearch" placeholder="Search team members..." />
+          <div class="picker-dropdown" id="inviteParticipantDropdown"></div>
+        </div>
+      </div>
+      <div class="form-group">
+        <label>External Guests</label>
+        <div class="guest-entry">
+          <input type="email" id="inviteGuestEmailInput" placeholder="guest@example.com" />
+          <button type="button" class="btn btn-outline btn-sm" id="inviteAddGuestBtn">Add Guest</button>
+        </div>
+        <div class="chip-list" id="inviteGuestChips"></div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-outline" data-close-modal="inviteModalOverlay" type="button">Cancel</button>
+      <button class="btn btn-primary" id="sendInvitationsBtn" type="button">Send Invitations</button>
+    </div>
+  </div>
+</div>
+
+<!-- ============ DELETE RECORDING CONFIRM ============ -->
+<div class="modal-overlay" id="deleteRecordingConfirmOverlay" hidden>
+  <div class="modal modal-confirm" role="dialog" aria-modal="true">
+    <div class="modal-body confirm-body">
+      <h3>Delete Recording?</h3>
+      <p>This recording will be permanently removed. This action cannot be undone.</p>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-outline" data-close-modal="deleteRecordingConfirmOverlay" type="button">Cancel</button>
+      <button class="btn btn-danger" id="confirmDeleteRecordingBtn" type="button">Delete Recording</button>
+    </div>
+  </div>
+</div>
+
+<!-- ============ REMOVE PARTICIPANT CONFIRM ============ -->
+<div class="modal-overlay" id="removeParticipantConfirmOverlay" hidden>
+  <div class="modal modal-confirm" role="dialog" aria-modal="true">
+    <div class="modal-body confirm-body">
+      <h3>Remove Participant?</h3>
+      <p id="removeParticipantText">This participant will be removed from the meeting.</p>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-outline" data-close-modal="removeParticipantConfirmOverlay" type="button">Cancel</button>
+      <button class="btn btn-danger" id="confirmRemoveParticipantBtn" type="button">Remove</button>
+    </div>
+  </div>
+</div>
+
+<!-- ============ RECORDING PREVIEW MODAL ============ -->
+<div class="modal-overlay" id="recordingPreviewOverlay" hidden>
+  <div class="modal modal-lg" role="dialog" aria-modal="true">
+    <div class="modal-header">
+      <h3 id="recordingPreviewTitle">Recording</h3>
+      <button class="modal-close" data-close-modal="recordingPreviewOverlay" type="button" aria-label="Close">&times;</button>
+    </div>
+    <div class="modal-body">
+      <div class="recording-player" id="recordingPlayerBox">
+        <svg width="48" height="48" viewBox="0 0 24 24" fill="currentColor"><polygon points="6 3 20 12 6 21 6 3"/></svg>
+        <span>Recording preview unavailable in prototype</span>
+      </div>
+      <div class="recording-meta" id="recordingPreviewMeta"></div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-outline" data-close-modal="recordingPreviewOverlay" type="button">Close</button>
+      <button class="btn btn-primary" id="recordingDownloadBtn" type="button">Download</button>
+    </div>
+  </div>
+</div>
+
+<!-- ============ TRANSCRIPT MODAL (permission "transcript.view", opened from Recordings / the meeting drawer) ============ -->
+<div class="modal-overlay" id="transcriptOverlay" hidden>
+  <div class="modal modal-lg" role="dialog" aria-modal="true" aria-labelledby="transcriptTitle">
+    <div class="modal-header">
+      <h3 id="transcriptTitle">Transcript</h3>
+      <button class="modal-close" data-close-modal="transcriptOverlay" type="button" aria-label="Close">&times;</button>
+    </div>
+    <div class="modal-body">
+      <div class="recording-meta mb-2" id="transcriptMeta"></div>
+      <div class="transcript-lines" id="transcriptLines"></div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-outline" data-close-modal="transcriptOverlay" type="button">Close</button>
+    </div>
+  </div>
+</div>
+
+<!-- ============ MEETING ACTION MENU (context menu, positioned via JS) ============ -->
+<div class="context-menu" id="meetingActionMenu" hidden></div>
+
+<!-- ============ TOASTS ============ -->
+<div class="toast-container" id="toastContainer"></div>
+
+<input type="file" id="fxBgFile" class="d-none" accept="image/jpeg,image/png,image/webp,.jpg,.jpeg,.png,.webp" aria-label="Choose a background image" tabindex="-1" />
+
+<script src="vendor/bootstrap.bundle.min.js"></script>
+<script src="js/video.js"></script>
+</body>
+</html>

@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <script src="../../shared/js/embed-bridge.js"></script>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Dashboard</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="../../shared/css/tokens.css" />
+    <link rel="stylesheet" href="css/dashboard.css" />
+  </head>
+  <body>
+    <main class="db" id="db">
+      <header class="db-head">
+        <div>
+          <h1 id="greeting">Good day</h1>
+          <p class="muted"><span id="today"></span> · <b id="roleTag"></b></p>
+          <p class="chips" id="rules"></p>
+        </div>
+        <div class="quick" id="quick"></div>
+      </header>
+
+      <section class="kpis" id="kpis" aria-label="Today at a glance"></section>
+
+      <div class="grid">
+        <section class="card wide">
+          <div class="card-h"><h2>Call volume</h2>
+            <div class="seg" id="rangeSeg" role="group" aria-label="Range">
+              <button type="button" data-range="today" class="on">Today</button>
+              <button type="button" data-range="week">7 days</button>
+            </div>
+          </div>
+          <div id="volume" class="chart"></div>
+          <div class="legend"><span><i style="background:var(--primary)"></i>Answered</span><span><i style="background:var(--danger)"></i>Abandoned</span></div>
+        </section>
+
+        <section class="card team-only">
+          <div class="card-h"><h2>Agents right now</h2></div>
+          <div id="agents" class="agents"></div>
+        </section>
+
+        <section class="card wide team-only">
+          <div class="card-h"><h2>Live queues</h2><a class="link" href="#" data-go="analytics/queues">Open Analytics</a></div>
+          <div class="tw"><table id="queues"><thead><tr><th>Queue</th><th class="r">Waiting</th><th class="r">Longest wait</th><th class="r">Agents</th><th>Service level</th></tr></thead><tbody></tbody></table></div>
+        </section>
+
+        <section class="card wide" id="upcomingCard">
+          <div class="card-h"><h2>Upcoming calls &amp; meetings</h2><a class="link" href="#" data-go="interactions/tasks">Open Tasks</a></div>
+          <ul id="upcoming" class="feed"></ul>
+        </section>
+
+        <section class="card">
+          <div class="card-h"><h2>Recent activity</h2></div>
+          <ul id="feed" class="feed"></ul>
+        </section>
+      </div>
+    </main>
+
+    <script src="js/data.js"></script>
+    <script src="js/charts.js"></script>
+    <script src="js/widgets.js"></script>
+    <script src="js/main.js"></script>
+    <script src="js/role.js"></script>
+    <script src="js/link.js"></script>
+  </body>
+</html>

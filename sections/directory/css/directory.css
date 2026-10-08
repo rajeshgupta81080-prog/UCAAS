@@ -1,0 +1,87 @@
+body{margin:0;min-height:100vh}
+.dir{max-width:1320px;margin:0 auto;padding:22px 24px 48px}
+.muted{color:var(--muted)}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+.dir-head{display:flex;justify-content:space-between;align-items:flex-end;gap:16px;flex-wrap:wrap;margin-bottom:16px}
+.dir-head h1{margin:0;font-size:22px;font-weight:700}
+.dir-head p{margin:4px 0 0}
+.tabs{display:flex;background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:3px}
+.tabs button{border:0;background:transparent;color:var(--muted);height:30px;padding:0 16px;border-radius:7px;font-weight:600;font-size:13px}
+.tabs button[aria-selected=true]{background:var(--primary-soft);color:var(--primary-text)}
+[hidden]{display:none!important}
+
+.toolbar{display:flex;gap:10px;margin-bottom:12px;flex-wrap:wrap}
+.field{display:block}
+.field.grow{flex:1;min-width:220px}
+.field input,.field select{height:38px;width:100%;border:1px solid var(--border);border-radius:10px;background:var(--surface);padding:0 12px;outline:0}
+.field input:focus,.field select:focus{border-color:var(--primary)}
+
+.card{background:var(--surface);border:1px solid var(--border);border-radius:12px;box-shadow:var(--shadow)}
+.tw{overflow-x:auto}
+table{width:100%;border-collapse:collapse}
+th{text-align:left;color:var(--muted);font-weight:600;font-size:11.5px;padding:12px 14px;border-bottom:1px solid var(--border);white-space:nowrap;user-select:none}
+th[data-sort]{cursor:pointer}
+th[data-sort]:hover{color:var(--text)}
+th.asc:after{content:" ▲";font-size:9px}th.desc:after{content:" ▼";font-size:9px}
+td{padding:10px 14px;border-bottom:1px solid var(--border);white-space:nowrap}
+tbody tr{cursor:pointer}
+tbody tr:hover{background:var(--surface-2)}
+tbody tr:last-child td{border-bottom:0}
+.r{text-align:right}
+.who{display:flex;align-items:center;gap:10px}
+.av{width:32px;height:32px;border-radius:50%;display:grid;place-items:center;color:#fff;font-weight:600;font-size:12px;flex:none}
+.who b{display:block;font-weight:600}
+.who small{color:var(--muted)}
+.st{display:inline-flex;align-items:center;gap:6px}
+.st i{width:8px;height:8px;border-radius:50%}
+.row-actions{display:inline-flex;gap:6px}
+.ib{height:30px;padding:0 10px;border:1px solid var(--border-2);border-radius:8px;background:var(--surface);color:var(--text);font-weight:600;font-size:12px}
+.ib:hover{background:var(--primary-soft);color:var(--primary-text);border-color:transparent}
+.empty{padding:28px;text-align:center;color:var(--muted)}
+.pager{display:flex;justify-content:space-between;align-items:center;margin-top:12px;color:var(--muted)}
+.pager div{display:flex;gap:6px}
+.pager button{height:32px;min-width:32px;padding:0 10px;border:1px solid var(--border);border-radius:8px;background:var(--surface);font-weight:600}
+.pager button[aria-current=true]{background:var(--primary);color:#fff;border-color:var(--primary)}
+.pager button:disabled{opacity:.45;cursor:default}
+
+.cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:14px}
+.team{padding:16px}
+.team h3{margin:0 0 4px;font-size:15px}
+.team .lead{color:var(--muted);margin-bottom:12px}
+.team .stack{display:flex;margin-bottom:12px}
+.team .stack .av{width:28px;height:28px;font-size:10.5px;border:2px solid var(--surface);margin-left:-8px}
+.team .stack .av:first-child{margin-left:0}
+.team .stack .more{background:var(--panel);color:var(--muted)}
+.team .meta{display:flex;justify-content:space-between;align-items:center;color:var(--muted)}
+.team .meta button{border:0;background:none;color:var(--primary);font-weight:600}
+
+.scrim{position:fixed;inset:0;background:rgba(10,14,25,.4);z-index:40}
+.drawer{position:fixed;top:0;right:0;bottom:0;width:min(400px,100%);background:var(--surface);border-left:1px solid var(--border);box-shadow:var(--shadow-lg);z-index:41;padding:22px;overflow-y:auto}
+.drawer .x{position:absolute;top:14px;right:14px;width:32px;height:32px;border:0;border-radius:8px;background:var(--surface-2);font-size:18px;line-height:1;color:var(--muted)}
+.drawer .top{display:flex;flex-direction:column;align-items:center;text-align:center;margin:12px 0 18px}
+.drawer .av{width:72px;height:72px;font-size:24px;margin-bottom:10px}
+.drawer h2{margin:0;font-size:18px}
+.drawer dl{margin:0;display:grid;grid-template-columns:110px 1fr;gap:10px 8px;font-size:13px}
+.drawer dt{color:var(--muted)}
+.drawer dd{margin:0;word-break:break-word}
+.drawer .acts{display:flex;gap:8px;margin-top:20px}
+.drawer .acts .ib{flex:1;height:38px;font-size:13px}
+.drawer .acts .ib.primary{background:var(--primary);color:#fff;border-color:var(--primary)}
+
+@media (max-width:700px){.dir{padding:16px 14px 40px}.hide-sm{display:none}}
+
+[data-role=agent] .tabs{display:none}
+
+/* scheduling dialog (Directory -> Tasks / Calls / Meetings) */
+.drawer .acts{flex-wrap:wrap}
+.drawer .acts .ib{flex:1 1 30%;min-width:96px}
+dialog.sched{border:1px solid var(--border);border-radius:14px;background:var(--surface);color:var(--text);padding:0;width:min(420px,92vw);box-shadow:var(--shadow-lg)}
+dialog.sched::backdrop{background:rgba(10,14,25,.45)}
+.sched form{padding:20px;display:grid;gap:12px}
+.sched h2{margin:0;font-size:16px}
+.sched label{display:grid;gap:5px;font-weight:600;font-size:12px}
+.sched input,.sched select{height:36px;border:1px solid var(--border-2);border-radius:9px;background:var(--surface);padding:0 10px;font-weight:400}
+.sched .warn{background:var(--warn-bg);border:1px solid var(--warn-bd);color:var(--warn-tx);border-radius:9px;padding:8px 10px;font-size:12px}
+.sched .row{display:flex;gap:8px;justify-content:flex-end;margin-top:4px}
+.sched .row button{height:36px;padding:0 16px;border-radius:9px;border:1px solid var(--border-2);background:var(--surface);color:var(--text);font-weight:600}
+.sched .row .pri{background:var(--primary);border-color:var(--primary);color:#fff}

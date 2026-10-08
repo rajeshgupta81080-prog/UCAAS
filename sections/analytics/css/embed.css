@@ -1,0 +1,7 @@
+/* Inside UCAAS: shared top bar replaces this page's own (ids stay in the DOM because app.js binds to them),
+   and fonts + colours follow the Company Rules Settings / top bar tokens. */
+html.embedded .top{display:none}
+html.embedded{font-size:calc(var(--scale) * .88)}
+html.embedded body{font-family:Inter,system-ui,sans-serif;letter-spacing:0}
+:root{--bg:#f1f3f9;--card:#fff;--ink:#111827;--ink2:#374151;--line:#e4e8f0;--brand:#2563eb;--brand-ink:#1d4ed8;--brand-soft:#e8efff;--side:#fff;--pill:#f6f8fc;--surface:#fff;--surface2:#f6f8fc;--line2:#e4e8f0;--muted:#6b7280;--faint:#8b93a3;--grid:#e4e8f0}
+:root[data-theme=dark]{--bg:#0e121b;--card:#161b27;--ink:#e8ecf5;--ink2:#c3c9d8;--line:#252c3c;--brand:#4f83ff;--brand-ink:#8fb0ff;--brand-soft:#1d2a4a;--side:#161b27;--pill:#1b2130;--surface:#161b27;--surface2:#1b2130;--line2:#252c3c;--muted:#98a2b6;--faint:#7f8aa0;--grid:#252c3c}

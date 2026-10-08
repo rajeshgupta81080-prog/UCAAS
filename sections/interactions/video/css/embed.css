@@ -1,0 +1,16 @@
+/* Inside UCAAS: shared top bar replaces the video app's navbar (its tabs duplicate Dashboard / Directory / Analytics / Settings),
+   and colours follow the Company Rules Settings / top bar tokens. Inter and the 80% density already match. */
+html.embedded .navbar{display:none}
+:root{--bg-page:#f1f3f9;--bg-surface:#fff;--bg-surface-alt:#f6f8fc;--bg-hover:#eef1f8;--border-color:#e4e8f0;--border-strong:#d6dce8;--text-primary:#111827;--text-secondary:#374151;--text-tertiary:#8b93a3;--blue-25:#f6f9ff;--blue-50:#e8efff;--blue-600:#2563eb;--blue-700:#1d4ed8}
+:root[data-theme="dark"]{--bg-page:#0e121b;--bg-surface:#161b27;--bg-surface-alt:#1b2130;--bg-hover:#1d2433;--border-color:#252c3c;--border-strong:#303851;--text-primary:#e8ecf5;--text-secondary:#98a2b6;--text-tertiary:#7f8aa0;--blue-25:#141d33;--blue-50:#1d2a4a;--blue-100:#243660;--blue-600:#4f83ff;--blue-700:#8fb0ff}
+/* the role is chosen from the profile picture in the shared top bar, so this app's own switcher is removed */
+html.embedded #roleSwitchWrap{display:none}
+
+/* Company Rules (js/video.js): closed banner, holiday marks on the calendar, note in the schedule form */
+.ucaas-closed{display:flex;flex-wrap:wrap;gap:4px 10px;align-items:baseline;margin:0 0 12px;padding:10px 14px;border-radius:var(--radius-md);background:#fef2f2;border:1px solid #fecaca;color:#991b1b;font-size:.8125rem}
+.ucaas-closed span{color:#b45353}
+:root[data-theme="dark"] .ucaas-closed{background:#2a1316;border-color:#5b2328;color:#fca5a5}
+.calendar-cell.co-closed{background-image:repeating-linear-gradient(135deg,rgba(100,116,139,.12) 0 6px,transparent 6px 12px)}
+.calendar-cell.co-hol{box-shadow:inset 0 -2px 0 #dc2626;color:#dc2626;font-weight:700}
+.ucaas-closed-note{margin-top:6px;padding:7px 10px;border-radius:var(--radius-sm);background:#fffbeb;border:1px solid #fde9a8;color:#92400e;font-size:.75rem}
+.ucaas-closed-note[hidden]{display:none}

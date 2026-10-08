@@ -1,0 +1,9 @@
+/* Design tokens shared by the UCAAS shell and the new sections (Dashboard, Directory, Interactions host).
+   Values are the Company Rules Admin Hub tokens, unchanged. */
+:root{--bg:#f1f3f9;--surface:#ffffff;--surface-2:#f6f8fc;--panel:#eef1f8;--border:#e4e8f0;--border-2:#d6dce8;--text:#111827;--muted:#6b7280;--muted-2:#8b93a3;--primary:#2563eb;--primary-soft:#e8efff;--primary-text:#1d4ed8;--warn-bg:#fffbeb;--warn-bd:#fde9a8;--warn-tx:#92400e;--ok-bg:#dcf5ee;--ok-tx:#0f766e;--soon-bg:#fdeedd;--soon-tx:#c2570c;--info-bg:#e7ecf6;--info-tx:#4b5565;--danger:#dc2626;--ok:#16a34a;--toggle-off:#8e96ab;--shadow:0 1px 2px rgba(16,24,40,.04);--shadow-lg:0 12px 32px rgba(16,24,40,.14)}
+:root[data-theme=dark]{--bg:#0e121b;--surface:#161b27;--surface-2:#1b2130;--panel:#131825;--border:#252c3c;--border-2:#303851;--text:#e8ecf5;--muted:#98a2b6;--muted-2:#7f8aa0;--primary:#4f83ff;--primary-soft:#1d2a4a;--primary-text:#8fb0ff;--warn-bg:#2a2310;--warn-bd:#4a3d12;--warn-tx:#f3c76b;--ok-bg:#0f2c28;--ok-tx:#5fd4c3;--soon-bg:#33210f;--soon-tx:#f5a15a;--info-bg:#1c2333;--info-tx:#a3adc0;--toggle-off:#4a526a;--shadow-lg:0 12px 32px rgba(0,0,0,.5)}
+*{box-sizing:border-box}
+body{margin:0;font-family:Inter,system-ui,sans-serif;font-size:13px;color:var(--text);background:var(--bg);-webkit-font-smoothing:antialiased}
+button{font-family:inherit;cursor:pointer}
+input,select,textarea{font-family:inherit;font-size:13px;color:var(--text)}
+svg{flex-shrink:0}
